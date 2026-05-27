@@ -1,7 +1,8 @@
-import Layout from '@/components/layouts/admin';
-import CustomerCreateForm from '@/components/user/user-form';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// components
+import Layout from '@/components/layouts/admin';
+import CustomerCreateForm from '@/components/customer/customer-form';
 
 export default function CreateCustomerPage() {
   const { t } = useTranslation();

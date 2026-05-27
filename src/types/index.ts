@@ -458,6 +458,11 @@ export interface User {
   email_verified: boolean;
 }
 
+export interface Customer {
+  id: string;
+  name: string;
+}
+
 export interface Domain {
   id: String;
   url: String;
@@ -910,6 +915,10 @@ export interface CreateCategoryInput {
   details?: string;
   image?: AttachmentInput;
   icon?: string;
+}
+
+export interface CreateCustomerInput {
+  name: string;
 }
 
 export interface CreateWithdrawInput {
@@ -2027,6 +2036,8 @@ export interface TermsAndConditionsPaginator
 export interface ProductPaginator extends PaginatorInfo<Product> {}
 
 export interface CategoryPaginator extends PaginatorInfo<Category> {}
+
+export interface CustomerPaginator extends PaginatorInfo<Customer> {}
 
 export interface TaxPaginator extends PaginatorInfo<Tax> {}
 

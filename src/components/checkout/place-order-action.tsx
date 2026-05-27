@@ -1,19 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import ValidationError from '@/components/ui/validation-error';
-import Button from '@/components/ui/button';
-import isEmpty from 'lodash/isEmpty';
-import { formatOrderedProduct } from '@/utils/format-ordered-product';
-import { useCart } from '@/contexts/quick-cart/cart.context';
 import { useAtom } from 'jotai';
-import { checkoutAtom, discountAtom, walletAtom } from '@/contexts/checkout';
+import isEmpty from 'lodash/isEmpty';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+// utils
+import { formatOrderedProduct } from '@/utils/format-ordered-product';
+// contexts
 import {
   calculatePaidTotal,
   calculateTotal,
 } from '@/contexts/quick-cart/cart.utils';
-import { useCreateOrderMutation } from '@/data/order';
+import { useCart } from '@/contexts/quick-cart/cart.context';
+import { checkoutAtom, discountAtom, walletAtom } from '@/contexts/checkout';
+// types
 import { PaymentGateway } from '@/types';
-import { useTranslation } from 'react-i18next';
+// hooks
+import { useCreateOrderMutation } from '@/data/order';
+// components
+import Button from '@/components/ui/button';
+import ValidationError from '@/components/ui/validation-error';
 
 export const PlaceOrderAction: React.FC<{
   children?: React.ReactNode;
@@ -31,6 +36,7 @@ export const PlaceOrderAction: React.FC<{
       delivery_time,
       coupon,
       verified_response,
+      customer_name,
       customer_contact,
       customer,
       payment_gateway,
@@ -81,6 +87,7 @@ export const PlaceOrderAction: React.FC<{
       delivery_fee: verified_response?.shipping_charge,
       total,
       delivery_time: delivery_time?.title,
+      customer_name,
       customer_contact,
       customer_id: customer?.value,
       use_wallet_points,
@@ -104,12 +111,13 @@ export const PlaceOrderAction: React.FC<{
     createOrder(input);
   };
   const isAllRequiredFieldSelected = [
-    customer,
+    // customer,
+    customer_name,
     customer_contact,
-    payment_gateway,
-    billing_address,
-    shipping_address,
-    delivery_time,
+    // payment_gateway,
+    // billing_address,
+    // shipping_address,
+    // delivery_time,
     available_items,
   ].every((item) => !isEmpty(item));
   return (

@@ -1,16 +1,19 @@
-import Button from '@/components/ui/button';
-import Input from '@/components/ui/input';
-import PasswordInput from '@/components/ui/password-input';
-import { useForm } from 'react-hook-form';
-import Card from '@/components/common/card';
-import Description from '@/components/ui/description';
-import { useRegisterMutation } from '@/data/user';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { customerValidationSchema } from './user-validation-schema';
-import { Permission } from '@/types';
+// hooks
+import { useRegisterMutation } from '@/data/user';
+import { useCreateCustomerMutation } from '@/data/customer';
+// components
+import { useForm } from 'react-hook-form';
+import Input from '@/components/ui/input';
+import Button from '@/components/ui/button';
+import Card from '@/components/common/card';
+import Description from '@/components/ui/description';
+import PasswordInput from '@/components/ui/password-input';
 import StickyFooterPanel from '@/components/ui/sticky-footer-panel';
-import { useRouter } from 'next/router';
+import { customerValidationSchema } from '../user/user-validation-schema';
+import { Permission } from '@/types';
 import { Routes } from '@/config/routes';
 import { toast } from 'react-toastify';
 
@@ -26,47 +29,58 @@ const defaultValues = {
   password: '',
 };
 
-const UserCreateForm = () => {
+const CustomerCreateForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { mutate: registerUser, isLoading: loading } = useRegisterMutation();
+  const { mutate: createCustomer, isLoading: creating } =
+    useCreateCustomerMutation();
 
   const {
     register,
     handleSubmit,
     setError,
-
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues,
     resolver: yupResolver(customerValidationSchema),
   });
 
-  async function onSubmit({ name, email, password }: FormValues) {
-    registerUser(
-      {
-        name,
-        email,
-        password,
-        // permission: Permission.StoreOwner,
-      },
-      {
-        onError: (error: any) => {
-          Object.keys(error?.response?.data).forEach((field: any) => {
-            setError(field, {
-              type: 'manual',
-              message: error?.response?.data[field][0],
-            });
-          });
-        },
-        onSuccess: (data) => {
-          if (data) {
-            router.push(Routes.user.list);
-          }
-        },
-      }
-    );
-  }
+  const onSubmit = async (values: FormValues) => {
+    const input = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+    };
+
+    createCustomer({ ...input });
+  };
+
+  // async function onSubmit({ name, email, password }: FormValues) {
+  //   registerUser(
+  //     {
+  //       name,
+  //       email,
+  //       password,
+  //       // permission: Permission.StoreOwner,
+  //     },
+  //     {
+  //       onError: (error: any) => {
+  //         Object.keys(error?.response?.data).forEach((field: any) => {
+  //           setError(field, {
+  //             type: 'manual',
+  //             message: error?.response?.data[field][0],
+  //           });
+  //         });
+  //       },
+  //       onSuccess: (data) => {
+  //         if (data) {
+  //           router.push(Routes.user.list);
+  //         }
+  //       },
+  //     }
+  //   );
+  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -117,4 +131,4 @@ const UserCreateForm = () => {
   );
 };
 
-export default UserCreateForm;
+export default CustomerCreateForm;

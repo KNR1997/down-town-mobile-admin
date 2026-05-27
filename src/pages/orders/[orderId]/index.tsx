@@ -1,37 +1,43 @@
-import Card from '@/components/common/card';
-import { DownloadIcon } from '@/components/icons/download-icon';
-import Layout from '@/components/layouts/admin';
-import OrderStatusProgressBox from '@/components/order/order-status-progress-box';
-import OrderViewHeader from '@/components/order/order-view-header';
-import Button from '@/components/ui/button';
-import ErrorMessage from '@/components/ui/error-message';
-import ValidationError from '@/components/ui/form-validation-error';
-import Loader from '@/components/ui/loader/loader';
-import SelectInput from '@/components/ui/select-input';
-import { Table } from '@/components/ui/table';
+import Image from 'next/image';
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// settings
+import { siteSettings } from '@/settings/site.settings';
+// contexts
 import { clearCheckoutAtom } from '@/contexts/checkout';
-import { useCart } from '@/contexts/quick-cart/cart.context';
+// utils
+import usePrice from '@/utils/use-price';
+import { useIsRTL } from '@/utils/locals';
+import { ORDER_STATUS } from '@/utils/order-status';
+import { formatString } from '@/utils/format-string';
+import { formatAddress } from '@/utils/format-address';
+import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+// types
+import { Attachment, OrderStatus, PaymentStatus } from '@/types';
+// hooks
 import {
   useDownloadInvoiceMutation,
   useOrderQuery,
   useUpdateOrderMutation,
 } from '@/data/order';
+// components
+import Card from '@/components/common/card';
+import Button from '@/components/ui/button';
+import { Table } from '@/components/ui/table';
+import Layout from '@/components/layouts/admin';
+import Loader from '@/components/ui/loader/loader';
+import SelectInput from '@/components/ui/select-input';
+import ErrorMessage from '@/components/ui/error-message';
+import { useCart } from '@/contexts/quick-cart/cart.context';
 import { NoDataFound } from '@/components/icons/no-data-found';
-import { siteSettings } from '@/settings/site.settings';
-import { Attachment, OrderStatus, PaymentStatus } from '@/types';
-import { formatAddress } from '@/utils/format-address';
-import { formatString } from '@/utils/format-string';
-import { useIsRTL } from '@/utils/locals';
-import { ORDER_STATUS } from '@/utils/order-status';
-import usePrice from '@/utils/use-price';
-import { useAtom } from 'jotai';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+import { DownloadIcon } from '@/components/icons/download-icon';
+import OrderViewHeader from '@/components/order/order-view-header';
+import ValidationError from '@/components/ui/form-validation-error';
+import OrderStatusProgressBox from '@/components/order/order-status-progress-box';
 
 type FormValues = {
   order_status: any;
@@ -211,7 +217,7 @@ export default function OrderDetailsPage() {
             {t('form:input-label-order-id')} - {order?.tracking_number}
           </h3>
 
-          {![
+          {/* {![
             OrderStatus.FAILED,
             OrderStatus.CANCELLED,
             OrderStatus.REFUNDED,
@@ -241,7 +247,7 @@ export default function OrderDetailsPage() {
                 </span>
               </Button>
             </form>
-          )}
+          )} */}
         </div>
 
         <div className="my-5 flex items-center justify-center lg:my-10">
@@ -293,10 +299,10 @@ export default function OrderDetailsPage() {
                   <span>{t('common:order-sub-total')}</span>
                   <span>{sub_total}</span>
                 </div>
-                <div className="flex items-center justify-between text-sm text-body">
+                {/* <div className="flex items-center justify-between text-sm text-body">
                   <span> {t('text-shipping-charge')}</span>
                   <span>{shipping_charge}</span>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between text-sm text-body">
                   <span> {t('text-tax')}</span>
                   <span>{sales_tax}</span>
@@ -353,14 +359,14 @@ export default function OrderDetailsPage() {
               <span>
                 {formatString(order?.items?.length, t('text-item'))}
               </span>
-              <span>{order?.delivery_time}</span>
-              <span>
+              {/* <span>{order?.delivery_time}</span> */}
+              {/* <span>
                 {`${t('text-payment-method')}:  ${order?.payment_gateway}`}
-              </span>
+              </span> */}
             </div>
           </div>
 
-          <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
+          {/* <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
             <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading">
               {t('common:billing-address')}
             </h3>
@@ -372,9 +378,9 @@ export default function OrderDetailsPage() {
               )}
               {order?.customer_contact && <span>{phoneNumber}</span>}
             </div>
-          </div>
+          </div> */}
 
-          <div className="w-full sm:w-1/2 sm:ps-8">
+          {/* <div className="w-full sm:w-1/2 sm:ps-8">
             <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading text-start sm:text-end">
               {t('common:shipping-address')}
             </h3>
@@ -386,7 +392,7 @@ export default function OrderDetailsPage() {
               )}
               {order?.customer_contact && <span>{phoneNumber}</span>}
             </div>
-          </div>
+          </div> */}
         </div>
       </Card>
     </>

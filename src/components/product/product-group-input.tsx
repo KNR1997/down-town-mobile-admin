@@ -20,14 +20,16 @@ const ProductGroupInput = ({ control, error }: Props) => {
   });
   return (
     <div className="mb-5">
-      <Label>{t('form:input-label-group')}*</Label>
+      {/* <Label>{t('form:input-label-group')}</Label> */}
       <SelectInput
+        label={t('form:input-label-group')}
         name="type"
         control={control}
         getOptionLabel={(option: any) => option.name}
         getOptionValue={(option: any) => option.id}
         options={types!}
         isLoading={loading}
+        required
       />
       <ValidationError message={t(error!)} />
     </div>

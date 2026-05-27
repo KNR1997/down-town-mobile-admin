@@ -136,8 +136,8 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
 
       <div className="mt-4 space-y-2">
         <ItemInfoRow title={t('text-sub-total')} value={sub_total} />
-        <ItemInfoRow title={t('text-tax')} value={tax} />
-        <div className="flex justify-between">
+        {/* <ItemInfoRow title={t('text-tax')} value={tax} /> */}
+        {/* <div className="flex justify-between">
           <p className="text-sm text-body">
             {t('text-shipping')}{' '}
             <span className="text-xs font-semibold text-accent">
@@ -145,8 +145,8 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
             </span>
           </p>
           <span className="text-sm text-body"> {shipping}</span>
-        </div>
-        {discount && coupon ? (
+        </div> */}
+        {/* {discount && coupon ? (
           <div className="flex justify-between">
             <p className="flex items-center gap-1 text-sm text-body me-2">
               {t('text-discount')}{' '}
@@ -172,7 +172,7 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
           <div className="mt-5 !mb-4 flex justify-between">
             <Coupon subtotal={base_amount} />
           </div>
-        )}
+        )} */}
         <div className="flex justify-between border-t-4 border-double border-border-200 pt-3">
           <p className="text-base font-semibold text-heading">
             {t('text-total')}
@@ -180,16 +180,16 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
           <span className="text-base font-semibold text-heading">{total}</span>
         </div>
       </div>
-      {verifiedResponse && (
+      {/* {verifiedResponse && (
         <Wallet
           totalPrice={totalPrice}
           walletAmount={verifiedResponse.wallet_amount}
           walletCurrency={verifiedResponse.wallet_currency}
         />
-      )}
-      {use_wallet && !Boolean(payableAmount) ? null : (
+      )} */}
+      {/* {use_wallet && !Boolean(payableAmount) ? null : (
         <PaymentGrid className="mt-10 border border-gray-200 bg-light p-5" />
-      )}
+      )} */}
       <PlaceOrderAction>{t('text-place-order')}</PlaceOrderAction>
     </div>
   );

@@ -29,6 +29,9 @@ export const useCreateCategoryMutation = () => {
     onSettled: () => {
       queryClient.invalidateQueries(API_ENDPOINTS.CATEGORIES);
     },
+    onError: (error: any) => {
+      toast.error(error?.response?.data.message);
+    },
   });
 };
 
@@ -71,6 +74,9 @@ export const useUpdateCategoryMutation = () => {
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries(API_ENDPOINTS.CATEGORIES);
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data.message);
     },
   });
 };
