@@ -461,6 +461,9 @@ export interface User {
 export interface Customer {
   id: string;
   name: string;
+  email: string;
+  profile: Profile;
+  addresses: Address[];
 }
 
 export interface Domain {
@@ -917,8 +920,14 @@ export interface CreateCategoryInput {
   icon?: string;
 }
 
+export interface CreateProfileInput {
+  bio?: string;
+  contact?: string;
+}
 export interface CreateCustomerInput {
   name: string;
+  email: string;
+  profile?: CreateProfileInput;
 }
 
 export interface CreateWithdrawInput {
@@ -1782,6 +1791,11 @@ export interface CategoryQueryOptions extends QueryOptions {
   name: string;
   parent: number | null;
   self: string;
+}
+
+export interface CustomerQueryOptions extends QueryOptions {
+  name: string;
+  contact: string;
 }
 
 export interface ConversationQueryOptions extends QueryOptions {

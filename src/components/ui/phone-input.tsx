@@ -50,6 +50,7 @@ const PhoneNumberInput: React.FC<Props> = ({
               ''
             )}
             <PhoneInput
+              country={'lk'}
               value={value}
               onChange={onChange}
               inputClass={twMerge(

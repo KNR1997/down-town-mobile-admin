@@ -1,7 +1,13 @@
 import { useAtom } from 'jotai';
+import { QueryClient } from 'react-query';
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import { customerClient } from '@/data/client/customer';
+import { API_ENDPOINTS } from '@/data/client/api-endpoints';
 // contexts
-import { customerContactAtom, customerNameAtom } from '@/contexts/checkout';
+import { customerContactAtom } from '@/contexts/checkout';
 // components
+import { selectStyles } from '@/components/ui/select/select.styles';
+import Select from '@/components/ui/select/select';
 import Input from '@/components/ui/input';
 
 interface CustomerProps {
@@ -21,6 +27,27 @@ const CustomerContactNumberGrid = ({
     setCustomerContact(e.target.value);
   };
 
+  function onCustomerUpdate(customer: any) {
+    setCustomerContact(customer);
+  }
+
+  async function fetchAsyncOptions(inputValue: string) {
+    const queryClient = new QueryClient();
+    const data = await queryClient.fetchQuery(
+      [API_ENDPOINTS.USERS, { text: inputValue, page: 1 }],
+      () => customerClient.paginated({ contact: inputValue, page: 1 }),
+    );
+
+    return data?.data?.map((user: any) => ({
+      value: user.id,
+      label: `${user.name} - ${user?.profile?.contact}`,
+    }));
+  }
+
+  async function handleCreateCustomer(inputValue: string) {
+    setCustomerContact(inputValue);
+  }
+
   return (
     <div className={className}>
       <div className="mb-5 flex items-center justify-between md:mb-8">
@@ -35,11 +62,16 @@ const CustomerContactNumberGrid = ({
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        <Input
-          name="customerName"
-          value={customerContact}
-          onChange={handleChange}
+        <AsyncCreatableSelect
+          styles={selectStyles}
+          cacheOptions
+          defaultOptions
+          loadOptions={fetchAsyncOptions}
+          onChange={onCustomerUpdate}
+          onCreateOption={handleCreateCustomer}
+          isClearable
         />
+        {/* <Input name="contact" value={customerContact.label} /> */}
       </div>
     </div>
   );

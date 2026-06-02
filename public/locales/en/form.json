@@ -287,7 +287,7 @@
   "error-credential-wrong": "The credentials was wrong!",
   "error-enough-permission": "Doesn't have enough permission",
   "error-email-format": "The provided email address format is not valid",
-  "error-email-required": "You must need to provide your email address",
+  "error-email-required": "Email is required",
   "error-attribute-required": "Attribute is required",
   "error-type-required": "Group is required",
   "error-admin-commission": "You must need to set your commission rate",

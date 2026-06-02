@@ -56,6 +56,7 @@ interface SearchParamOptions {
   code: string;
   type: string;
   name: string;
+  contact: string;
   shop_id: string;
   is_approved: boolean;
   tracking_number: string;

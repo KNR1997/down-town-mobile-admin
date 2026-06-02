@@ -18,6 +18,13 @@ import { useUserQuery } from '@/data/user';
 // components
 import Layout from '@/components/layouts/admin';
 import Loader from '@/components/ui/loader/loader';
+import AddressGrid from '@/components/checkout/address-grid';
+const CustomerGrid = dynamic(
+  () => import('@/components/checkout/customer/customer-grid'),
+);
+const ContactGrid = dynamic(
+  () => import('@/components/checkout/contact/contact-grid'),
+);
 const CustomerNameGrid = dynamic(
   () => import('@/components/checkout/customer/customer-name-grid'),
 );
@@ -36,13 +43,13 @@ export default function CheckoutPage() {
     data: user,
     isLoading: loading,
     refetch,
-  } = useUserQuery({ id: customer?.value });
+  } = useUserQuery({ id: customer?.id });
 
   useEffect(() => {
-    if (customer?.value) {
-      refetch(customer?.value);
+    if (customer?.id) {
+      refetch(customer?.id);
     }
-  }, [customer?.value]);
+  }, [customer?.id]);
 
   if (loading) return <Loader text={t('common:text-loading')} />;
 
@@ -50,30 +57,30 @@ export default function CheckoutPage() {
     <div className="bg-gray-100">
       <div className="lg:space-s-8 m-auto flex w-full max-w-5xl flex-col items-center lg:flex-row lg:items-start">
         <div className="w-full space-y-6 lg:max-w-2xl">
-          <CustomerNameGrid
+          {/* <CustomerNameGrid
             className="shadow-700 bg-light p-5 md:p-8"
             label={t('text-customer-name')}
             count={1}
-          />
-          <CustomerContactNumberGrid
+          /> */}
+          {/* <CustomerContactNumberGrid
             className="shadow-700 bg-light p-5 md:p-8"
             label={t('text-contact-number')}
             count={2}
-          />
-          {/* <CustomerGrid
+          /> */}
+          <CustomerGrid
             className="shadow-700 bg-light p-5 md:p-8"
             //@ts-ignore
             // contact={user?.profile?.contact}
             label={t('text-customer')}
             count={1}
-          /> */}
-          {/* <ContactGrid
+          />
+          <ContactGrid
             className="shadow-700 bg-light p-5 md:p-8"
             //@ts-ignore
             contact={user?.profile?.contact}
             label={t('text-contact-number')}
-            count={1}
-          /> */}
+            count={2}
+          />
           {/* <AddressGrid
             userId={user?.id!}
             className="shadow-700 bg-light p-5 md:p-8"

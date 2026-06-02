@@ -36,8 +36,6 @@ export const PlaceOrderAction: React.FC<{
       delivery_time,
       coupon,
       verified_response,
-      customer_name,
-      customer_contact,
       customer,
       payment_gateway,
       token,
@@ -64,7 +62,7 @@ export const PlaceOrderAction: React.FC<{
     Number(discount),
   );
   const handlePlaceOrder = () => {
-    if (!customer_contact) {
+    if (!customer?.profile.contact) {
       setErrorMessage('Contact Number Is Required');
       return;
     }
@@ -87,9 +85,9 @@ export const PlaceOrderAction: React.FC<{
       delivery_fee: verified_response?.shipping_charge,
       total,
       delivery_time: delivery_time?.title,
-      customer_name,
-      customer_contact,
-      customer_id: customer?.value,
+      customer_name: customer?.name,
+      customer_contact: customer?.profile.contact,
+      customer_id: customer?.id,
       use_wallet_points,
       payment_gateway: use_wallet_points
         ? PaymentGateway.FULL_WALLET_PAYMENT
@@ -111,9 +109,7 @@ export const PlaceOrderAction: React.FC<{
     createOrder(input);
   };
   const isAllRequiredFieldSelected = [
-    // customer,
-    customer_name,
-    customer_contact,
+    customer,
     // payment_gateway,
     // billing_address,
     // shipping_address,

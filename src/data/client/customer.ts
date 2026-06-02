@@ -3,6 +3,7 @@ import {
   CreateCustomerInput,
   Customer,
   CustomerPaginator,
+  CustomerQueryOptions,
   QueryOptions,
 } from '@/types';
 import { API_ENDPOINTS } from './api-endpoints';
@@ -13,12 +14,11 @@ export const customerClient = {
   ...crudFactory<Customer, QueryOptions, CreateCustomerInput>(
     API_ENDPOINTS.CUSTOMERS
   ),
-  paginated: ({ type, name, self, ...params }: Partial<CategoryQueryOptions>) => {
+  paginated: ({ name, contact, ...params }: Partial<CustomerQueryOptions>) => {
     return HttpClient.get<CustomerPaginator>(API_ENDPOINTS.CUSTOMERS, {
       searchJoin: 'and',
-      self,
       ...params,
-      search: HttpClient.formatSearchParams({ type, name }),
+      search: HttpClient.formatSearchParams({ name, contact }),
     });
   },
 };
