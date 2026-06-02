@@ -99,7 +99,7 @@ const OrderList = ({
       key: 'name',
       align: alignLeft,
       width: 250,
-      onHeaderCell: () => onHeaderClick('name'),
+      onHeaderCell: () => onHeaderClick('customer_name'),
       // render: (logo: any, record: any) => (
       //   <Image
       //     src={logo?.thumbnail ?? siteSettings.product.placeholder}
