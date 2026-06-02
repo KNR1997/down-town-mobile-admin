@@ -106,46 +106,46 @@ export const siteSettings = {
       //   ],
       // },
 
-      shop: {
-        href: '',
-        label: 'text-shop-management',
-        icon: 'ShopIcon',
-        childMenu: [
-          {
-            href: '',
-            label: 'sidebar-nav-item-shops',
-            icon: 'ShopIcon',
-            childMenu: [
-              {
-                href: Routes.shop.list,
-                label: 'text-all-shops',
-                icon: 'MyShopIcon',
-              },
-              {
-                href: Routes.shop.create,
-                label: 'text-add-all-shops',
-                icon: 'ShopIcon',
-              },
-              {
-                href: Routes.newShops,
-                label: 'text-inactive-shops',
-                icon: 'MyShopIcon',
-              },
-            ],
-          },
-          {
-            href: Routes.adminMyShops,
-            label: 'sidebar-nav-item-my-shops',
-            icon: 'MyShopIcon',
-          },
-          {
-            href: Routes.ownershipTransferRequest.list,
-            label: 'Shop Transfer Request',
-            icon: 'MyShopIcon',
-            permission: adminAndOwnerOnly,
-          },
-        ],
-      },
+      // shop: {
+      //   href: '',
+      //   label: 'text-shop-management',
+      //   icon: 'ShopIcon',
+      //   childMenu: [
+      //     {
+      //       href: '',
+      //       label: 'sidebar-nav-item-shops',
+      //       icon: 'ShopIcon',
+      //       childMenu: [
+      //         {
+      //           href: Routes.shop.list,
+      //           label: 'text-all-shops',
+      //           icon: 'MyShopIcon',
+      //         },
+      //         {
+      //           href: Routes.shop.create,
+      //           label: 'text-add-all-shops',
+      //           icon: 'ShopIcon',
+      //         },
+      //         {
+      //           href: Routes.newShops,
+      //           label: 'text-inactive-shops',
+      //           icon: 'MyShopIcon',
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       href: Routes.adminMyShops,
+      //       label: 'sidebar-nav-item-my-shops',
+      //       icon: 'MyShopIcon',
+      //     },
+      //     {
+      //       href: Routes.ownershipTransferRequest.list,
+      //       label: 'Shop Transfer Request',
+      //       icon: 'MyShopIcon',
+      //       permission: adminAndOwnerOnly,
+      //     },
+      //   ],
+      // },
 
       product: {
         href: '',
@@ -162,11 +162,11 @@ export const siteSettings = {
                 label: 'text-all-products',
                 icon: 'ProductsIcon',
               },
-              // {
-              //   href: Routes.product.create,
-              //   label: 'Add new product',
-              //   icon: 'ProductsIcon',
-              // },
+              {
+                href: Routes.product.create,
+                label: 'Add new product',
+                icon: 'ProductsIcon',
+              },
               {
                 href: Routes.draftProducts,
                 label: 'text-my-draft-products',
@@ -189,26 +189,26 @@ export const siteSettings = {
             label: 'sidebar-nav-item-categories',
             icon: 'CategoriesIcon',
           },
-          {
-            href: Routes.tag.list,
-            label: 'sidebar-nav-item-tags',
-            icon: 'TagIcon',
-          },
-          {
-            href: Routes.attribute.list,
-            label: 'sidebar-nav-item-attributes',
-            icon: 'AttributeIcon',
-          },
-          {
-            href: Routes.manufacturer.list,
-            label: 'sidebar-nav-item-manufacturers',
-            icon: 'ManufacturersIcon',
-          },
-          {
-            href: Routes.author.list,
-            label: 'sidebar-nav-item-authors',
-            icon: 'AuthorIcon',
-          },
+          // {
+          //   href: Routes.tag.list,
+          //   label: 'sidebar-nav-item-tags',
+          //   icon: 'TagIcon',
+          // },
+          // {
+          //   href: Routes.attribute.list,
+          //   label: 'sidebar-nav-item-attributes',
+          //   icon: 'AttributeIcon',
+          // },
+          // {
+          //   href: Routes.manufacturer.list,
+          //   label: 'sidebar-nav-item-manufacturers',
+          //   icon: 'ManufacturersIcon',
+          // },
+          // {
+          //   href: Routes.author.list,
+          //   label: 'sidebar-nav-item-authors',
+          //   icon: 'AuthorIcon',
+          // },
         ],
       },
 
@@ -367,45 +367,45 @@ export const siteSettings = {
             label: 'text-all-users',
             icon: 'UsersIcon',
           },
-          {
-            href: Routes.adminList,
-            label: 'text-admin-list',
-            icon: 'AdminListIcon',
-          },
-          {
-            href: '',
-            label: 'text-vendors',
-            icon: 'VendorsIcon',
-            childMenu: [
-              {
-                href: Routes.vendorList,
-                label: 'text-all-vendors',
-                icon: 'UsersIcon',
-              },
-              {
-                href: Routes.pendingVendorList,
-                label: 'text-pending-vendors',
-                icon: 'UsersIcon',
-              },
-            ],
-          },
-          {
-            href: '',
-            label: 'sidebar-nav-item-staffs',
-            icon: 'StaffIcon',
-            childMenu: [
-              {
-                href: Routes.myStaffs,
-                label: 'sidebar-nav-item-my-staffs',
-                icon: 'UsersIcon',
-              },
-              {
-                href: Routes.vendorStaffs,
-                label: 'sidebar-nav-item-vendor-staffs',
-                icon: 'UsersIcon',
-              },
-            ],
-          },
+          // {
+          //   href: Routes.adminList,
+          //   label: 'text-admin-list',
+          //   icon: 'AdminListIcon',
+          // },
+          // {
+          //   href: '',
+          //   label: 'text-vendors',
+          //   icon: 'VendorsIcon',
+          //   childMenu: [
+          //     {
+          //       href: Routes.vendorList,
+          //       label: 'text-all-vendors',
+          //       icon: 'UsersIcon',
+          //     },
+          //     {
+          //       href: Routes.pendingVendorList,
+          //       label: 'text-pending-vendors',
+          //       icon: 'UsersIcon',
+          //     },
+          //   ],
+          // },
+          // {
+          //   href: '',
+          //   label: 'sidebar-nav-item-staffs',
+          //   icon: 'StaffIcon',
+          //   childMenu: [
+          //     {
+          //       href: Routes.myStaffs,
+          //       label: 'sidebar-nav-item-my-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //     {
+          //       href: Routes.vendorStaffs,
+          //       label: 'sidebar-nav-item-vendor-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //   ],
+          // },
           {
             href: Routes.customerList,
             label: 'text-customers',

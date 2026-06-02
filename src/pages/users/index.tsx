@@ -55,12 +55,12 @@ export default function AllUsersPage() {
             placeholderText={t('form:input-placeholder-search-name')}
           />
 
-          <LinkButton
+          {/* <LinkButton
             href={`${Routes.user.create}`}
             className="h-12 w-full md:w-auto md:ms-6"
           >
             <span>+ {t('form:button-label-add-user')}</span>
-          </LinkButton>
+          </LinkButton> */}
         </div>
       </Card>
 

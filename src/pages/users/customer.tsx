@@ -25,7 +25,7 @@ export default function CustomersPage() {
   const { customers, paginatorInfo, loading, error } = useCustomersQuery({
     limit: 20,
     page,
-    search: searchTerm,
+    name: searchTerm,
     orderBy,
     sortedBy,
   });

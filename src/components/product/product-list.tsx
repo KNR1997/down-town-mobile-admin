@@ -174,7 +174,7 @@ const ProductList = ({
         });
 
         const { price } = usePrice({
-          amount: value,
+          amount: Number(value),
         });
 
         const renderPrice =

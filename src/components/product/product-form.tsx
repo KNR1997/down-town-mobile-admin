@@ -396,9 +396,9 @@ export default function CreateOrUpdateProductForm({
                 error={t((errors?.type as any)?.message)}
               />
               <ProductCategoryInput control={control} setValue={setValue} />
-              <ProductAuthorInput control={control} />
-              <ProductManufacturerInput control={control} setValue={setValue} />
-              <ProductTagInput control={control} setValue={setValue} />
+              {/* <ProductAuthorInput control={control} /> */}
+              {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
+              {/* <ProductTagInput control={control} setValue={setValue} /> */}
             </Card>
           </div>
 
