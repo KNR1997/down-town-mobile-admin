@@ -75,17 +75,17 @@ export default function Dashboard() {
   //     amount: data?.todaysRevenue!,
   //   },
   // );
-  // const {
-  //   error: orderError,
-  //   orders: orderData,
-  //   loading: orderLoading,
-  //   paginatorInfo: orderPaginatorInfo,
-  // } = useOrdersQuery({
-  //   language: locale,
-  //   limit: 5,
-  //   page,
-  //   tracking_number: searchTerm,
-  // });
+  const {
+    error: orderError,
+    orders: orderData,
+    loading: orderLoading,
+    paginatorInfo: orderPaginatorInfo,
+  } = useOrdersQuery({
+    language: locale,
+    limit: 5,
+    page,
+    tracking_number: searchTerm,
+  });
   // const {
   //   data: popularProductData,
   //   isLoading: popularProductLoading,
@@ -98,14 +98,14 @@ export default function Dashboard() {
   //   error: topRatedProductsError,
   // } = useTopRatedProductsQuery({ limit: 10, language: locale });
 
-  // const {
-  //   data: lowStockProduct,
-  //   isLoading: lowStockProductLoading,
-  //   error: lowStockProductError,
-  // } = useLowProductStockQuery({
-  //   limit: 10,
-  //   language: locale,
-  // });
+  const {
+    data: lowStockProduct,
+    isLoading: lowStockProductLoading,
+    error: lowStockProductError,
+  } = useLowProductStockQuery({
+    limit: 10,
+    language: locale,
+  });
 
   // const {
   //   data: productByCategory,
@@ -195,34 +195,34 @@ export default function Dashboard() {
           </h3>
         </div>
 
-        {/* <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StickerCard
             titleTransKey="sticker-card-title-rev"
             subtitleTransKey="sticker-card-subtitle-rev"
             icon={<EaringIcon className="h-8 w-8" />}
             color="#1EAE98"
-            price={total_revenue}
+            // price={total_revenue}
           />
           <StickerCard
             titleTransKey="sticker-card-title-order"
             subtitleTransKey="sticker-card-subtitle-order"
             icon={<ShoppingIcon className="h-8 w-8" />}
             color="#865DFF"
-            price={data?.totalOrders}
+            // price={data?.totalOrders}
           />
           <StickerCard
             titleTransKey="sticker-card-title-vendor"
             icon={<ChecklistIcon className="h-8 w-8" />}
             color="#D74EFF"
-            price={data?.totalVendors}
+            // price={data?.totalVendors}
           />
           <StickerCard
             titleTransKey="sticker-card-title-total-shops"
             icon={<BasketIcon className="h-8 w-8" />}
             color="#E157A0"
-            price={data?.totalShops}
+            // price={data?.totalShops}
           />
-        </div> */}
+        </div>
       </div>
 
       <div className="col-span-full rounded-lg bg-light p-6 md:p-7">
@@ -267,7 +267,7 @@ export default function Dashboard() {
         /> */}
       </div>
 
-      {/* <RecentOrders
+      <RecentOrders
         className="col-span-full"
         orders={orderData}
         paginatorInfo={orderPaginatorInfo}
@@ -281,7 +281,7 @@ export default function Dashboard() {
             inputClassName="!h-10"
           />
         }
-      /> */}
+      />
       <div className="lg:col-span-full 2xl:col-span-8">
         <ColumnChart
           widgetTitle={t('common:sale-history')}

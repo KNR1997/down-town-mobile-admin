@@ -1,12 +1,20 @@
-import { RadioGroup } from '@headlessui/react';
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
-import Alert from '@/components/ui/alert';
-import CashOnDelivery from '@/components/checkout/payment/cash-on-delivery';
-import { useAtom } from 'jotai';
-import { paymentGatewayAtom, PaymentMethodName } from '@/contexts/checkout';
 import cn from 'classnames';
-import CashPayment from './cash';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { RadioGroup } from '@headlessui/react';
+// contexts
+import {
+  paymentGatewayAtom,
+  PaymentMethodName,
+} from '@/contexts/checkout';
+// hooks
+import { useModalAction } from '@/components/ui/modal/modal.context';
+// components
+import Alert from '@/components/ui/alert';
+import CashPayment from '@/components/checkout/payment/cash';
+import CardPayment from '@/components/checkout/payment/card';
+import CashOnDelivery from '@/components/checkout/payment/cash-on-delivery';
 
 interface PaymentMethodInformation {
   name: string;
@@ -16,7 +24,6 @@ interface PaymentMethodInformation {
 }
 
 // Payment Methods Mapping Object
-
 const AVAILABLE_PAYMENT_METHODS_MAP: Record<
   PaymentMethodName,
   PaymentMethodInformation
@@ -27,20 +34,44 @@ const AVAILABLE_PAYMENT_METHODS_MAP: Record<
     icon: '',
     component: CashPayment,
   },
-  CASH_ON_DELIVERY: {
-    name: 'common:text-cash-on-delivery',
-    value: 'CASH_ON_DELIVERY',
+  // CASH_ON_DELIVERY: {
+  //   name: 'common:text-cash-on-delivery',
+  //   value: 'CASH_ON_DELIVERY',
+  //   icon: '',
+  //   component: CashOnDelivery,
+  // },
+  CARD: {
+    name: 'common:payment-card',
+    value: 'CARD',
     icon: '',
-    component: CashOnDelivery,
+    component: CardPayment,
   },
 };
 
 const PaymentGrid: React.FC<{ className?: string }> = ({ className }) => {
-  const [gateway, setGateway] = useAtom<PaymentMethodName>(paymentGatewayAtom);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation('common');
+  const { openModal } = useModalAction();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [gateway, setGateway] = useAtom<PaymentMethodName>(paymentGatewayAtom);
   const PaymentMethod = AVAILABLE_PAYMENT_METHODS_MAP[gateway];
   const Component = PaymentMethod?.component ?? CashOnDelivery;
+
+  function handleSelectGateway(gateway: PaymentMethodName) {
+    switch (gateway) {
+      case 'CARD':
+        openModal('CARD_DETAILS');
+        break;
+      case 'CASH':
+        // Handle CASH selection if needed
+        break;
+      // case 'CASH_ON_DELIVERY':
+      //   // Handle CASH_ON_DELIVERY selection if needed
+      //   break;
+      default:
+        break;
+    }
+  }
+
   return (
     <div className={className}>
       {errorMessage ? (
@@ -53,7 +84,13 @@ const PaymentGrid: React.FC<{ className?: string }> = ({ className }) => {
         />
       ) : null}
 
-      <RadioGroup value={gateway} onChange={setGateway}>
+      <RadioGroup
+        value={gateway}
+        onChange={(value) => {
+          setGateway(value);
+          handleSelectGateway(value);
+        }}
+      >
         <RadioGroup.Label className="mb-5 block text-base font-semibold text-heading">
           {t('text-choose-payment')}
         </RadioGroup.Label>
@@ -68,7 +105,7 @@ const PaymentGrid: React.FC<{ className?: string }> = ({ className }) => {
                       'relative flex h-full w-full cursor-pointer items-center justify-center rounded border py-3 text-center',
                       checked
                         ? 'shadow-600 border-accent bg-light'
-                        : 'border-gray-200 bg-light'
+                        : 'border-gray-200 bg-light',
                     )}
                   >
                     {icon ? (
@@ -84,7 +121,7 @@ const PaymentGrid: React.FC<{ className?: string }> = ({ className }) => {
                   </div>
                 )}
               </RadioGroup.Option>
-            )
+            ),
           )}
         </div>
       </RadioGroup>

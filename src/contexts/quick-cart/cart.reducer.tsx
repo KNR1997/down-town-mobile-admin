@@ -5,11 +5,13 @@ import {
   removeItemOrQuantity,
   addItem,
   updateItem,
+  applyDiscountToItem,
   removeItem,
   calculateUniqueItems,
   calculateItemTotals,
   calculateTotalItems,
   calculateTotal,
+  removeDiscountFromItem,
 } from './cart.utils';
 
 interface Metadata {
@@ -21,6 +23,13 @@ type Action =
   | { type: 'REMOVE_ITEM_OR_QUANTITY'; id: Item['id']; quantity?: number }
   | { type: 'ADD_ITEM'; id: Item['id']; item: Item }
   | { type: 'UPDATE_ITEM'; id: Item['id']; item: UpdateItemInput }
+  | {
+      type: 'APPLY_DISCOUNT_TO_ITEM';
+      id: Item['id'];
+      discountAmount: number;
+      discountType: 'percentage' | 'fixed';
+    }
+  | { type: 'REMOVE_DISCOUNT_FROM_ITEM'; id: Item['id'] }
   | { type: 'REMOVE_ITEM'; id: Item['id'] }
   | { type: 'RESET_CART' };
 
@@ -46,7 +55,7 @@ export function cartReducer(state: State, action: Action): State {
       const items = addItemWithQuantity(
         state.items,
         action.item,
-        action.quantity
+        action.quantity,
       );
       return generateFinalState(state, items);
     }
@@ -54,7 +63,7 @@ export function cartReducer(state: State, action: Action): State {
       const items = removeItemOrQuantity(
         state.items,
         action.id,
-        (action.quantity = 1)
+        (action.quantity = 1),
       );
       return generateFinalState(state, items);
     }
@@ -68,6 +77,19 @@ export function cartReducer(state: State, action: Action): State {
     }
     case 'UPDATE_ITEM': {
       const items = updateItem(state.items, action.id, action.item);
+      return generateFinalState(state, items);
+    }
+    case 'APPLY_DISCOUNT_TO_ITEM': {
+      const items = applyDiscountToItem(
+        state.items,
+        action.id,
+        action.discountAmount,
+        action.discountType,
+      );
+      return generateFinalState(state, items);
+    }
+    case 'REMOVE_DISCOUNT_FROM_ITEM': {
+      const items = removeDiscountFromItem(state.items, action.id);
       return generateFinalState(state, items);
     }
     case 'RESET_CART':

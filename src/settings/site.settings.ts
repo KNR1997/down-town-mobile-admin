@@ -194,11 +194,11 @@ export const siteSettings = {
           //   label: 'sidebar-nav-item-tags',
           //   icon: 'TagIcon',
           // },
-          // {
-          //   href: Routes.attribute.list,
-          //   label: 'sidebar-nav-item-attributes',
-          //   icon: 'AttributeIcon',
-          // },
+          {
+            href: Routes.attribute.list,
+            label: 'sidebar-nav-item-attributes',
+            icon: 'AttributeIcon',
+          },
           // {
           //   href: Routes.manufacturer.list,
           //   label: 'sidebar-nav-item-manufacturers',

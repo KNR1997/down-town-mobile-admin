@@ -37,6 +37,7 @@ export enum PaymentGateway {
   STRIPE = 'STRIPE',
   COD = 'CASH_ON_DELIVERY',
   CASH = 'CASH',
+  CARD = 'CARD',
   FULL_WALLET_PAYMENT = 'FULL_WALLET_PAYMENT',
   PAYPAL = 'PAYPAL',
   MOLLIE = 'MOLLIE',
@@ -741,8 +742,8 @@ export interface Product {
   slug: string;
   type: Type;
   product_type: ProductType;
-  max_price?: number;
-  min_price?: number;
+  max_price?: string;
+  min_price?: string;
   categories: Category[];
   variations?: AttributeValue[];
   variation_options?: Variation[];
@@ -765,7 +766,7 @@ export interface Product {
   height?: string;
   length?: string;
   width?: string;
-  price: number;
+  price: string;
   quantity?: number;
   unit?: string;
   external_product_url?: string;

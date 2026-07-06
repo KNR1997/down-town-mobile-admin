@@ -71,6 +71,8 @@ export function useCreateOrderMutation() {
     onSuccess: (data: any) => {
       if (data?.id) {
         router.push(`${Routes.order.list}/${data?.id}`);
+      } else {
+        router.push(Routes.order.list);
       }
     },
     onError: (error) => {

@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { Config } from '@/config';
 import ValidationError from '@/components/ui/form-validation-error';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Category, ItemProps } from '@/types';
+import { Category, ItemProps, Type } from '@/types';
 import { categoryIcons } from './category-icons';
 import { useTranslation } from 'next-i18next';
 import FileInput from '@/components/ui/file-input';
@@ -67,7 +67,7 @@ function SelectTypes({
   const { types, loading } = useTypesQuery({ language: locale });
   return (
     <div className="mb-5">
-      <Label>{t('form:input-label-types')}</Label>
+      <Label>{t('form:input-label-group')}</Label>
       <SelectInput
         name="type"
         control={control}
@@ -133,7 +133,7 @@ type FormValues = {
   parent: any;
   image: any;
   icon: any;
-  type: any;
+  type: Type | null;
 };
 
 const defaultValues = {
@@ -143,7 +143,7 @@ const defaultValues = {
   details: '',
   parent: '',
   icon: '',
-  type: '',
+  type: null,
 };
 
 type IProps = {

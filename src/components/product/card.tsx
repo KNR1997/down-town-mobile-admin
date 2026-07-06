@@ -29,14 +29,14 @@ const ProductCard = ({ item }: Props) => {
     basePrice,
     discount,
   } = usePrice({
-    amount: sale_price ? sale_price : price!,
-    baseAmount: price ?? 0,
+    amount: Number(sale_price) ? Number(sale_price) : Number(price)!,
+    baseAmount: Number(price) ?? 0,
   });
   const { price: minPrice } = usePrice({
-    amount: min_price ?? 0,
+    amount: Number(min_price) ?? 0,
   });
   const { price: maxPrice } = usePrice({
-    amount: max_price ?? 0,
+    amount: Number(max_price) ?? 0,
   });
 
   const { openModal } = useModalAction();

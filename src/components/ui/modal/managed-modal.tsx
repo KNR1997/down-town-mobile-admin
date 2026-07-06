@@ -3,6 +3,12 @@ import Modal from '@/components/ui/modal/modal';
 import dynamic from 'next/dynamic';
 import { MODAL_VIEWS, useModalAction, useModalState } from './modal.context';
 
+const ItemDiscountView = dynamic(
+  () => import('@/components/checkout/item/item-discount-modal'),
+);
+const CardDetailsModal = dynamic(
+  () => import('@/components/checkout/payment/card-detail-modal'),
+);
 const CreateCustomerView = dynamic(
   () => import('@/components/checkout/customer/create-customer-modal'),
 );
@@ -172,6 +178,10 @@ function renderModal(view: MODAL_VIEWS | undefined, data: any) {
       return <ProductDeleteView />;
     case 'DELETE_TYPE':
       return <TypeDeleteView />;
+    case 'CART_ITEM_DISCOUNT':
+      return <ItemDiscountView />;
+    case 'CARD_DETAILS':
+      return <CardDetailsModal />;
     case 'DELETE_ATTRIBUTE':
       return <AttributeDeleteView />;
     case 'DELETE_CATEGORY':

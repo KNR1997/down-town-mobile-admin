@@ -117,12 +117,12 @@ export const productValidationSchema = yup.object().shape({
       url: yup.string().required('Video URL is required'),
     }),
   ),
-  description: yup
-    .string()
-    .max(
-      MAXIMUM_WORD_COUNT_FOR_RICH_TEXT_EDITOR,
-      'form:error-description-maximum-title',
-    ),
+  // description: yup
+  //   .string()
+  //   .max(
+  //     MAXIMUM_WORD_COUNT_FOR_RICH_TEXT_EDITOR,
+  //     'form:error-description-maximum-title',
+  //   ),
 
   is_external: yup.boolean(),
   external_product_url: yup.object().when('is_external', {

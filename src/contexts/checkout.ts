@@ -15,6 +15,26 @@ interface VerifiedResponse {
   wallet_amount: number;
   wallet_currency: number;
 }
+
+// Card Details Interface
+export interface CardDetails {
+  cardType: string;           // e.g., 'visa', 'mastercard'
+  lastDigits: string;         // Last 4 digits only (e.g., '1234')
+  maskedCardNumber: string;   // Masked format: '4111 11XX XXXX 1111'
+  expireMonth: string;        // MM
+  expireYear: string;         // YY
+  cardHolderName: string;     // Name on card
+  // NEVER store: full card number, CVV, PIN
+}
+
+export interface CardToken {
+  token: string;              // Payment gateway token
+  brand: string;              // Card brand
+  last4: string;              // Last 4 digits
+  expiryMonth: string;
+  expiryYear: string;
+}
+
 interface CheckoutState {
   billing_address: Address | null;
   shipping_address: Address | null;
@@ -27,8 +47,10 @@ interface CheckoutState {
   coupon: Coupon | null;
   payable_amount: number;
   use_wallet: boolean;
+  card_details: CardDetails | null; // Add card details to checkout state
   [key: string]: unknown;
 }
+
 export const defaultCheckout: CheckoutState = {
   billing_address: null,
   shipping_address: null,
@@ -41,8 +63,10 @@ export const defaultCheckout: CheckoutState = {
   coupon: null,
   payable_amount: 0,
   use_wallet: false,
+  card_details: null, // Initialize card details as null
 };
-export type PaymentMethodName = 'CASH_ON_DELIVERY' | 'CASH';
+
+export type PaymentMethodName = 'CASH' | 'CARD';
 
 // Original atom.
 export const checkoutAtom = atomWithStorage(CHECKOUT, defaultCheckout);
@@ -142,3 +166,18 @@ export const payableAmountAtom = atom(
     return set(checkoutAtom, { ...prev, payable_amount: data });
   },
 );
+
+// Card Details Atom
+export const cardDetailsAtom = atom(
+  (get) => get(checkoutAtom).card_details,
+  (get, set, data: CardDetails | null) => {
+    const prev = get(checkoutAtom);
+    return set(checkoutAtom, { ...prev, card_details: data });
+  },
+);
+
+// Optional: Atom to clear card details (useful when switching payment methods)
+export const clearCardDetailsAtom = atom(null, (_get, set) => {
+  const prev = get(checkoutAtom);
+  return set(checkoutAtom, { ...prev, card_details: null });
+});

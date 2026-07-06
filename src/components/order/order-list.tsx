@@ -189,7 +189,7 @@ const OrderList = ({
       onHeaderCell: () => onHeaderClick('total'),
       render: function Render(value: any) {
         const { price } = usePrice({
-          amount: value,
+          amount: Number(value),
         });
         return <span className="whitespace-nowrap">{price}</span>;
       },

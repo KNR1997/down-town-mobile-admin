@@ -119,7 +119,7 @@ const ProductList = ({
       dataIndex: 'product_type',
       key: 'product_type',
       width: 150,
-      align: alignLeft,
+      align: 'center',
       render: (product_type: string) => (
         <span className="truncate whitespace-nowrap capitalize">
           {product_type}

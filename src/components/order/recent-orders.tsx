@@ -64,16 +64,14 @@ const RecentOrders = ({
         </div>
       ),
     },
+    // {
+    //   title: t('table:table-item-products'),
+    //   dataIndex: 'products',
+    //   key: 'products',
+    //   align: 'center',
+    //   render: (products: Product) => <span>{products.length}</span>,
+    // },
     {
-      title: t('table:table-item-products'),
-      dataIndex: 'products',
-      key: 'products',
-      align: 'center',
-      render: (products: Product) => <span>{products.length}</span>,
-    },
-
-    {
-      // title: t('table:table-item-order-date'),
       title: t('table:table-item-order-date'),
       dataIndex: 'created_at',
       key: 'created_at',
@@ -96,7 +94,7 @@ const RecentOrders = ({
       align: 'center',
       render: function Render(value: any) {
         const { price } = usePrice({
-          amount: value,
+          amount: Number(value),
         });
         return <span className="whitespace-nowrap font-medium">{price}</span>;
       },

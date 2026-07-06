@@ -67,13 +67,12 @@ export default function OrderDetailsPage() {
       isRTL,
       language: locale!,
     },
-    { enabled: false }
+    { enabled: false },
   );
 
   const {
     handleSubmit,
     control,
-
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: { order_status: order?.order_status ?? '' },
@@ -87,31 +86,31 @@ export default function OrderDetailsPage() {
   };
   const { price: subtotal } = usePrice(
     order && {
-      amount: order?.amount!,
-    }
+      amount: Number(order?.amount),
+    },
   );
 
   const { price: total } = usePrice(
     order && {
-      amount: order?.paid_total!,
-    }
+      amount: Number(order?.paid_total),
+    },
   );
   const { price: discount } = usePrice(
     order && {
       amount: order?.discount! ?? 0,
-    }
+    },
   );
   const { price: delivery_fee } = usePrice(
     order && {
       amount: order?.delivery_fee!,
-    }
+    },
   );
   const { price: sales_tax } = usePrice(
     order && {
-      amount: order?.sales_tax!,
-    }
+      amount: Number(order?.sales_tax),
+    },
   );
-  const { price: sub_total } = usePrice({ amount: order?.amount! });
+  const { price: sub_total } = usePrice({ amount: Number(order?.amount) });
   const { price: shipping_charge } = usePrice({
     amount: order?.delivery_fee ?? 0,
   });
@@ -150,6 +149,149 @@ export default function OrderDetailsPage() {
     }
   }
 
+  // const columns = [
+  //   {
+  //     dataIndex: 'image',
+  //     key: 'image',
+  //     width: 70,
+  //     render: (image: Attachment) => (
+  //       <div className="relative h-[50px] w-[50px]">
+  //         <Image
+  //           src={image?.thumbnail ?? siteSettings.product.placeholder}
+  //           alt="alt text"
+  //           fill
+  //           sizes="(max-width: 768px) 100vw"
+  //           className="object-fill"
+  //         />
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     title: t('table:table-item-products'),
+  //     dataIndex: 'product_name',
+  //     key: 'product_name',
+  //     align: alignLeft,
+  //     render: (product_name: string, item: any) => (
+  //       <div>
+  //         <span>{product_name}</span>
+  //         <span className="mx-2">x</span>
+  //         <span className="font-semibold text-heading">
+  //           {item.order_quantity}
+  //         </span>
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     title: t('table:table-item-unit-price'),
+  //     dataIndex: 'unit_price',
+  //     key: 'unit_price',
+  //     align: alignRight,
+  //     render: function Render(_: any, item: any) {
+  //       const { price } = usePrice({
+  //         amount: parseFloat(item.unit_price || item.price),
+  //       });
+  //       return <span>{price}</span>;
+  //     },
+  //   },
+  //   {
+  //     title: t('table:table-item-discount'),
+  //     dataIndex: 'discount',
+  //     key: 'discount',
+  //     align: alignRight,
+  //     render: function Render(_: any, item: any) {
+  //       const hasDiscount = item.discount && item.discount > 0;
+  //       const isPercentageDiscount = item.discount_type === 'percentage';
+
+  //       if (!hasDiscount) {
+  //         return <span className="text-gray-400">—</span>;
+  //       }
+
+  //       const { price: discountAmount } = usePrice({
+  //         amount: parseFloat(item.discount),
+  //       });
+
+  //       // Calculate total discount for the quantity
+  //       const totalDiscount =
+  //         parseFloat(item.discount) * parseFloat(item.order_quantity);
+  //       const { price: totalDiscountPrice } = usePrice({
+  //         amount: totalDiscount,
+  //       });
+
+  //       return (
+  //         <div className="flex flex-col items-end">
+  //           <span className="text-green-600 font-medium">
+  //             -{totalDiscountPrice}
+  //           </span>
+  //           {isPercentageDiscount && item.original_price && (
+  //             <span className="text-xs text-gray-500">
+  //               {(
+  //                 (parseFloat(item.discount) /
+  //                   parseFloat(item.original_price)) *
+  //                 100
+  //               ).toFixed(0)}
+  //               % off
+  //             </span>
+  //           )}
+  //           {!isPercentageDiscount && (
+  //             <span className="text-xs text-gray-500">
+  //               ${parseFloat(item.discount).toFixed(2)} off/unit
+  //             </span>
+  //           )}
+  //         </div>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     title: t('table:table-item-total'),
+  //     dataIndex: 'subtotal',
+  //     key: 'subtotal',
+  //     align: alignRight,
+  //     render: function Render(_: any, item: any) {
+  //       // Calculate the discounted total
+  //       const hasDiscount = item.discount > 0;
+  //       const unitPrice = parseFloat(item.unit_price || item.price);
+  //       const quantity = parseFloat(item.order_quantity);
+
+  //       let total = unitPrice * quantity;
+
+  //       if (hasDiscount) {
+  //         const discountAmount = parseFloat(item.discount);
+  //         if (item.discount_type === 'percentage') {
+  //           // Percentage discount
+  //           const discountPerUnit = (unitPrice * discountAmount) / 100;
+  //           total = (unitPrice - discountPerUnit) * quantity;
+  //         } else {
+  //           // Fixed discount
+  //           total = (unitPrice - discountAmount) * quantity;
+  //         }
+  //       }
+
+  //       const { price } = usePrice({
+  //         amount: total,
+  //       });
+
+  //       return (
+  //         <div className="flex flex-col items-end">
+  //           {hasDiscount && (
+  //             <span className="text-xs text-gray-400 line-through">
+  //               {(() => {
+  //                 const { price: originalPrice } = usePrice({
+  //                   amount:
+  //                     parseFloat(item.unit_price || item.price) * quantity,
+  //                 });
+  //                 return originalPrice;
+  //               })()}
+  //             </span>
+  //           )}
+  //           <span className={hasDiscount ? 'text-green-600 font-semibold' : ''}>
+  //             {price}
+  //           </span>
+  //         </div>
+  //       );
+  //     },
+  //   },
+  // ];
+
   const columns = [
     {
       dataIndex: 'image',
@@ -179,23 +321,133 @@ export default function OrderDetailsPage() {
           <span className="font-semibold text-heading">
             {item.order_quantity}
           </span>
+          {item.unit && (
+            <span className="ml-1 text-xs text-gray-400">/{item.unit}</span>
+          )}
         </div>
       ),
     },
     {
-      title: t('table:table-item-total'),
+      title: t('table:table-item-unit-price'),
       dataIndex: 'unit_price',
       key: 'unit_price',
       align: alignRight,
       render: function Render(_: any, item: any) {
+        const hasDiscount = item.discount && item.discount > 0;
+        const unitPrice = parseFloat(item.unit_price || item.price);
+
         const { price } = usePrice({
-          amount: parseFloat(item.subtotal),
+          amount: unitPrice,
         });
+
+        if (hasDiscount) {
+          const discountAmount = parseFloat(item.discount);
+          let discountedPrice = unitPrice;
+
+          if (item.discount_type === 'percentage') {
+            discountedPrice = unitPrice * (1 - discountAmount / 100);
+          } else {
+            discountedPrice = unitPrice - discountAmount;
+          }
+
+          const { price: discountedPriceFormatted } = usePrice({
+            amount: discountedPrice,
+          });
+
+          return (
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-gray-400 line-through">
+                {price}
+              </span>
+              <span className="text-green-600 font-medium">
+                {discountedPriceFormatted}
+              </span>
+            </div>
+          );
+        }
+
         return <span>{price}</span>;
       },
     },
-  ];
+    {
+      title: t('table:table-item-discount'),
+      dataIndex: 'discount',
+      key: 'discount',
+      align: alignRight,
+      render: function Render(_: any, item: any) {
+        const hasDiscount = item.discount && item.discount > 0;
 
+        if (!hasDiscount) {
+          return <span className="text-gray-400">—</span>;
+        }
+
+        const discountAmount = parseFloat(item.discount);
+        const quantity = parseFloat(item.order_quantity);
+        const totalDiscount = discountAmount * quantity;
+        const { price: totalDiscountPrice } = usePrice({
+          amount: totalDiscount,
+        });
+
+        return (
+          <div className="flex flex-col items-end">
+            <span className="text-red-500 font-medium">
+              -{totalDiscountPrice}
+            </span>
+            <span className="text-xs text-gray-500">
+              {item.discount_type === 'percentage'
+                ? `${discountAmount}% off`
+                : `$${discountAmount.toFixed(2)}/unit`}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      title: t('table:table-item-total'),
+      dataIndex: 'subtotal',
+      key: 'subtotal',
+      align: alignRight,
+      render: function Render(_: any, item: any) {
+        const unitPrice = parseFloat(item.unit_price || item.price);
+        const quantity = parseFloat(item.order_quantity);
+        const hasDiscount = item.discount && item.discount > 0;
+
+        let total = unitPrice * quantity;
+        let originalTotal = total;
+
+        if (hasDiscount) {
+          const discountAmount = parseFloat(item.discount);
+          if (item.discount_type === 'percentage') {
+            const discountPerUnit = (unitPrice * discountAmount) / 100;
+            total = (unitPrice - discountPerUnit) * quantity;
+          } else {
+            total = (unitPrice - discountAmount) * quantity;
+          }
+        }
+
+        const { price: totalPrice } = usePrice({
+          amount: total,
+        });
+
+        if (hasDiscount) {
+          const { price: originalPrice } = usePrice({
+            amount: originalTotal,
+          });
+
+          return (
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-gray-400 line-through">
+                {originalPrice}
+              </span>
+              <span className="text-green-600 font-semibold">{totalPrice}</span>
+            </div>
+          );
+        }
+
+        return <span>{totalPrice}</span>;
+      },
+    },
+  ];
   return (
     <>
       <Card className="relative overflow-hidden">
@@ -356,9 +608,7 @@ export default function OrderDetailsPage() {
             </h3>
 
             <div className="flex flex-col items-start space-y-1 text-sm text-body">
-              <span>
-                {formatString(order?.items?.length, t('text-item'))}
-              </span>
+              <span>{formatString(order?.items?.length, t('text-item'))}</span>
               {/* <span>{order?.delivery_time}</span> */}
               {/* <span>
                 {`${t('text-payment-method')}:  ${order?.payment_gateway}`}

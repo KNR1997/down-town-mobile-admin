@@ -84,24 +84,24 @@ const AttributeList = ({ attributes, onSort, onOrder }: IProps) => {
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: any) => <span className="whitespace-nowrap">{name}</span>,
     },
-    {
-      title: t('table:table-item-values'),
-      dataIndex: 'values',
-      key: 'values',
-      align: alignLeft,
-      width: 320,
-      render: (values: any) => {
-        return (
-          <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
-            {values?.map((singleValues: any, index: number) => (
-              <span key={index} className="rounded bg-gray-200/50 px-2.5 py-1">
-                {singleValues.value}
-              </span>
-            ))}
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: t('table:table-item-values'),
+    //   dataIndex: 'values',
+    //   key: 'values',
+    //   align: alignLeft,
+    //   width: 320,
+    //   render: (values: any) => {
+    //     return (
+    //       <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
+    //         {values?.map((singleValues: any, index: number) => (
+    //           <span key={index} className="rounded bg-gray-200/50 px-2.5 py-1">
+    //             {singleValues.value}
+    //           </span>
+    //         ))}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: t('table:table-item-slug'),
       dataIndex: 'slug',

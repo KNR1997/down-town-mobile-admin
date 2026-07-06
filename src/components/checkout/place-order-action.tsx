@@ -39,6 +39,7 @@ export const PlaceOrderAction: React.FC<{
       customer,
       payment_gateway,
       token,
+      card_details,
     },
   ] = useAtom(checkoutAtom);
   const [discount] = useAtom(discountAtom);
@@ -92,6 +93,18 @@ export const PlaceOrderAction: React.FC<{
       payment_gateway: use_wallet_points
         ? PaymentGateway.FULL_WALLET_PAYMENT
         : payment_gateway,
+      payment_method: payment_gateway,
+      card_details: payment_gateway== PaymentGateway.CARD && card_details
+        ? {
+            card_type: card_details?.cardType,
+            card_number: card_details?.maskedCardNumber,
+            // last_digits: card_details?.lastDigits,
+            expiry_month: card_details?.expireMonth,
+            expiry_year: card_details?.expireYear,
+            // cvv: card_details?.cvv,
+            card_holder_name: card_details?.cardHolderName,
+          }
+        : null,
       billing_address: {
         ...(billing_address?.address && billing_address.address),
       },
@@ -106,6 +119,7 @@ export const PlaceOrderAction: React.FC<{
 
     // delete input.billing_address.__typename;
     // delete input.shipping_address.__typename;
+    // console.log('input-----------------: ', input);
     createOrder(input);
   };
   const isAllRequiredFieldSelected = [

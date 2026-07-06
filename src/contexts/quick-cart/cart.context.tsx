@@ -7,6 +7,12 @@ import { useAtom } from 'jotai';
 import { verifiedResponseAtom } from '@/contexts/checkout';
 interface CartProviderState extends State {
   addItemToCart: (item: Item, quantity: number) => void;
+  applyDiscountToItem: (
+    id: Item['id'],
+    discountAmount: number,
+    discountType: 'percentage' | 'fixed',
+  ) => void;
+  removeDiscountFromItem: (id: Item['id']) => void;
   removeItemFromCart: (id: Item['id']) => void;
   clearItemFromCart: (id: Item['id']) => void;
   getItemFromCart: (id: Item['id']) => any | undefined;
@@ -15,7 +21,7 @@ interface CartProviderState extends State {
   resetCart: () => void;
 }
 export const cartContext = React.createContext<CartProviderState | undefined>(
-  undefined
+  undefined,
 );
 
 cartContext.displayName = 'CartContext';
@@ -29,15 +35,15 @@ export const useCart = () => {
 };
 
 export const CartProvider: React.FC<{ children?: React.ReactNode }> = (
-  props
+  props,
 ) => {
   const [savedCart, saveCart] = useLocalStorage(
     CART_KEY,
-    JSON.stringify(initialState)
+    JSON.stringify(initialState),
   );
   const [state, dispatch] = React.useReducer(
     cartReducer,
-    JSON.parse(savedCart!)
+    JSON.parse(savedCart!),
   );
   const [, emptyVerifiedResponse] = useAtom(verifiedResponseAtom);
   React.useEffect(() => {
@@ -50,27 +56,42 @@ export const CartProvider: React.FC<{ children?: React.ReactNode }> = (
 
   const addItemToCart = (item: Item, quantity: number) =>
     dispatch({ type: 'ADD_ITEM_WITH_QUANTITY', item, quantity });
+  const applyDiscountToItem = (
+    id: Item['id'],
+    discountAmount: number,
+    discountType: 'percentage' | 'fixed',
+  ) =>
+    dispatch({
+      type: 'APPLY_DISCOUNT_TO_ITEM',
+      id,
+      discountAmount,
+      discountType,
+    });
+  const removeDiscountFromItem = (id: Item['id']) =>
+    dispatch({ type: 'REMOVE_DISCOUNT_FROM_ITEM', id });
   const removeItemFromCart = (id: Item['id']) =>
     dispatch({ type: 'REMOVE_ITEM_OR_QUANTITY', id });
   const clearItemFromCart = (id: Item['id']) =>
     dispatch({ type: 'REMOVE_ITEM', id });
   const isInCart = useCallback(
     (id: Item['id']) => !!getItem(state.items, id),
-    [state.items]
+    [state.items],
   );
   const getItemFromCart = useCallback(
     (id: Item['id']) => getItem(state.items, id),
-    [state.items]
+    [state.items],
   );
   const isInStock = useCallback(
     (id: Item['id']) => inStock(state.items, id),
-    [state.items]
+    [state.items],
   );
   const resetCart = () => dispatch({ type: 'RESET_CART' });
   const value = React.useMemo(
     () => ({
       ...state,
       addItemToCart,
+      applyDiscountToItem,
+      removeDiscountFromItem,
       removeItemFromCart,
       clearItemFromCart,
       getItemFromCart,
@@ -78,7 +99,7 @@ export const CartProvider: React.FC<{ children?: React.ReactNode }> = (
       isInStock,
       resetCart,
     }),
-    [getItemFromCart, isInCart, isInStock, state]
+    [getItemFromCart, isInCart, isInStock, state],
   );
   return <cartContext.Provider value={value} {...props} />;
 };
