@@ -6,44 +6,39 @@ import { adminOnly } from '@/utils/auth-utils';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 // contexts
-import {
-  billingAddressAtom,
-  customerAtom,
-  shippingAddressAtom,
-} from '@/contexts/checkout';
-// types
-import { AddressType } from '@/types';
+import { customerAtom } from '@/contexts/checkout';
 // hooks
-import { useUserQuery } from '@/data/user';
+import { useCustomerQuery } from '@/data/customer';
 // components
 import Layout from '@/components/layouts/admin';
 import Loader from '@/components/ui/loader/loader';
-import AddressGrid from '@/components/checkout/address-grid';
-const CustomerGrid = dynamic(
-  () => import('@/components/checkout/customer/customer-grid'),
-);
-const ContactGrid = dynamic(
-  () => import('@/components/checkout/contact/contact-grid'),
-);
-const CustomerNameGrid = dynamic(
-  () => import('@/components/checkout/customer/customer-name-grid'),
-);
-const CustomerContactNumberGrid = dynamic(
-  () => import('@/components/checkout/customer/customer-contact-number-grid'),
-);
+import CustomerDetailsGrid from '@/components/checkout/customer/customer-details';
+
+// const CustomerGrid = dynamic(
+//   () => import('@/components/checkout/customer/customer-grid'),
+// );
+// const ContactGrid = dynamic(
+//   () => import('@/components/checkout/contact/contact-grid'),
+// );
+// const CustomerNameGrid = dynamic(
+//   () => import('@/components/checkout/customer/customer-name-grid'),
+// );
+// const CustomerContactNumberGrid = dynamic(
+//   () => import('@/components/checkout/customer/customer-contact-number-grid'),
+// );
 const RightSideView = dynamic(
   () => import('@/components/checkout/right-side-view'),
 );
 
 export default function CheckoutPage() {
-  const [customer] = useAtom(customerAtom);
   const { t } = useTranslation();
+  const [customer] = useAtom(customerAtom);
 
   const {
     data: user,
     isLoading: loading,
     refetch,
-  } = useUserQuery({ id: customer?.id });
+  } = useCustomerQuery({ id: customer?.id });
 
   useEffect(() => {
     if (customer?.id) {
@@ -57,6 +52,12 @@ export default function CheckoutPage() {
     <div className="bg-gray-100">
       <div className="lg:space-s-8 m-auto flex w-full max-w-5xl flex-col items-center lg:flex-row lg:items-start">
         <div className="w-full space-y-6 lg:max-w-xl">
+          <CustomerDetailsGrid
+            initialValues={user}
+            label="Customer Details"
+            count={1}
+            className="shadow-700 bg-light p-5 md:p-8"
+          />
           {/* <CustomerNameGrid
             className="shadow-700 bg-light p-5 md:p-8"
             label={t('text-customer-name')}
@@ -67,7 +68,7 @@ export default function CheckoutPage() {
             label={t('text-contact-number')}
             count={2}
           /> */}
-          <CustomerGrid
+          {/* <CustomerGrid
             className="shadow-700 bg-light p-5 md:p-8"
             //@ts-ignore
             // contact={user?.profile?.contact}
@@ -80,7 +81,7 @@ export default function CheckoutPage() {
             contact={user?.profile?.contact}
             label={t('text-contact-number')}
             count={2}
-          />
+          /> */}
           {/* <AddressGrid
             userId={user?.id!}
             className="shadow-700 bg-light p-5 md:p-8"
