@@ -1,11 +1,12 @@
 import Router, { useRouter } from 'next/router';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'next-i18next';
 import { Routes } from '@/config/routes';
 import { API_ENDPOINTS } from './client/api-endpoints';
 import { Config } from '@/config';
 import { customerClient } from './client/customer';
+import { Customer } from '@/types';
 
 export const useCreateCustomerMutation = (options?: { redirect?: boolean }) => {
   const queryClient = useQueryClient();
@@ -46,4 +47,14 @@ export const useUpdateCustomerMutation = () => {
       toast.error(error?.response?.data.message);
     },
   });
+};
+
+export const useCustomerQuery = ({ id }: { id: string }) => {
+  return useQuery<Customer, Error>(
+    [API_ENDPOINTS.CUSTOMERS, id],
+    () => customerClient.fetchCustomer({ id }),
+    {
+      enabled: Boolean(id),
+    },
+  );
 };
