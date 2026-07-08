@@ -63,7 +63,7 @@ export const PlaceOrderAction: React.FC<{
     Number(discount),
   );
   const handlePlaceOrder = () => {
-    if (!customer?.profile.contact) {
+    if (!customer?.contact_number) {
       setErrorMessage('Contact Number Is Required');
       return;
     }
@@ -87,7 +87,7 @@ export const PlaceOrderAction: React.FC<{
       total,
       delivery_time: delivery_time?.title,
       customer_name: customer?.name,
-      customer_contact: customer?.profile.contact,
+      customer_contact: customer.contact_number,
       customer_id: customer?.id,
       use_wallet_points,
       payment_gateway: use_wallet_points
