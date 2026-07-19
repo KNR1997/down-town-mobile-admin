@@ -167,10 +167,10 @@ const ProductList = ({
       onHeaderCell: () => onHeaderClick('price'),
       render: function Render(value: number, record: Product) {
         const { price: max_price } = usePrice({
-          amount: record?.max_price as number,
+          amount: Number(record?.max_price),
         });
         const { price: min_price } = usePrice({
-          amount: record?.min_price as number,
+          amount: Number(record?.min_price),
         });
 
         const { price } = usePrice({

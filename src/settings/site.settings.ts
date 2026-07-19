@@ -147,6 +147,34 @@ export const siteSettings = {
       //   ],
       // },
 
+      stock: {
+        href: '',
+        label: 'text-stock-management',
+        icon: 'ProductsIcon',
+        childMenu: [
+          {
+            href: Routes.warehouse.list,
+            label: 'sidebar-nav-item-warehouses',
+            icon: 'WarehouseIcon',
+          },
+          {
+            href: Routes.supplier.list,
+            label: 'sidebar-nav-item-suppliers',
+            icon: 'ManufacturersIcon',
+          },
+          {
+            href: Routes.purchaseOrder.list,
+            label: 'sidebar-nav-item-purchase-orders',
+            icon: 'OrderListIcon',
+          },
+          {
+            href: Routes.grn.list,
+            label: 'sidebar-nav-item-goods-received-notes',
+            icon: 'WarehouseIcon_v2',
+          },
+        ],
+      },
+
       product: {
         href: '',
         label: 'text-product-management',

@@ -1,51 +1,35 @@
-import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-// settings
-import { siteSettings } from '@/settings/site.settings';
 // contexts
 import { clearCheckoutAtom } from '@/contexts/checkout';
 // utils
 import usePrice from '@/utils/use-price';
 import { useIsRTL } from '@/utils/locals';
-import { ORDER_STATUS } from '@/utils/order-status';
 import { formatString } from '@/utils/format-string';
 import { formatAddress } from '@/utils/format-address';
-import { useFormatPhoneNumber } from '@/utils/format-phone-number';
 // types
-import { Attachment, OrderStatus, PaymentStatus } from '@/types';
+import { OrderStatus, PaymentStatus } from '@/types';
 // hooks
-import {
-  useDownloadInvoiceMutation,
-  useOrderQuery,
-  useUpdateOrderMutation,
-} from '@/data/order';
+import { useDownloadInvoiceMutation, useOrderQuery } from '@/data/order';
 // components
 import Card from '@/components/common/card';
 import Button from '@/components/ui/button';
-import { Table } from '@/components/ui/table';
 import Layout from '@/components/layouts/admin';
 import Loader from '@/components/ui/loader/loader';
-import SelectInput from '@/components/ui/select-input';
 import ErrorMessage from '@/components/ui/error-message';
 import { useCart } from '@/contexts/quick-cart/cart.context';
-import { NoDataFound } from '@/components/icons/no-data-found';
+import OrderItemList from '@/components/order/order-item-list';
 import { DownloadIcon } from '@/components/icons/download-icon';
 import OrderViewHeader from '@/components/order/order-view-header';
-import ValidationError from '@/components/ui/form-validation-error';
 import OrderStatusProgressBox from '@/components/order/order-status-progress-box';
 
-type FormValues = {
-  order_status: any;
-};
 export default function OrderDetailsPage() {
   const { t } = useTranslation();
   const { query, locale } = useRouter();
-  const { alignLeft, alignRight, isRTL } = useIsRTL();
+  const { isRTL } = useIsRTL();
   const { resetCart } = useCart();
   const [, resetCheckout] = useAtom(clearCheckoutAtom);
 
@@ -55,7 +39,6 @@ export default function OrderDetailsPage() {
     resetCheckout();
   }, [resetCart, resetCheckout]);
 
-  const { mutate: updateOrder, isLoading: updating } = useUpdateOrderMutation();
   const {
     order,
     isLoading: loading,
@@ -70,20 +53,6 @@ export default function OrderDetailsPage() {
     { enabled: false },
   );
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: { order_status: order?.order_status ?? '' },
-  });
-
-  const ChangeStatus = ({ order_status }: FormValues) => {
-    updateOrder({
-      id: order?.id as string,
-      order_status: order_status?.status as string,
-    });
-  };
   const { price: subtotal } = usePrice(
     order && {
       amount: Number(order?.amount),
@@ -100,20 +69,12 @@ export default function OrderDetailsPage() {
       amount: order?.discount! ?? 0,
     },
   );
-  const { price: delivery_fee } = usePrice(
-    order && {
-      amount: order?.delivery_fee!,
-    },
-  );
   const { price: sales_tax } = usePrice(
     order && {
       amount: Number(order?.sales_tax),
     },
   );
   const { price: sub_total } = usePrice({ amount: Number(order?.amount) });
-  const { price: shipping_charge } = usePrice({
-    amount: order?.delivery_fee ?? 0,
-  });
   const { price: wallet_total } = usePrice({
     amount: order?.wallet_point?.amount!,
   });
@@ -125,329 +86,20 @@ export default function OrderDetailsPage() {
 
   const { price: amountDue } = usePrice({ amount: amountPayable });
 
-  // const totalItem = order?.products.reduce(
-  //   // @ts-ignore
-  //   (initial = 0, p) => initial + parseInt(p?.pivot?.order_quantity!),
-  //   0
-  // );
-
-  const phoneNumber = useFormatPhoneNumber({
-    customer_contact: order?.customer_contact as string,
-  });
-
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
 
   async function handleDownloadInvoice() {
-    const { data } = await refetch();
+    // const { data } = await refetch();
 
-    if (data) {
-      const a = document.createElement('a');
-      a.href = data;
-      a.setAttribute('download', 'order-invoice');
-      a.click();
-    }
+    // if (data) {
+    //   const a = document.createElement('a');
+    //   a.href = data;
+    //   a.setAttribute('download', 'order-invoice');
+    //   a.click();
+    // }
   }
 
-  // const columns = [
-  //   {
-  //     dataIndex: 'image',
-  //     key: 'image',
-  //     width: 70,
-  //     render: (image: Attachment) => (
-  //       <div className="relative h-[50px] w-[50px]">
-  //         <Image
-  //           src={image?.thumbnail ?? siteSettings.product.placeholder}
-  //           alt="alt text"
-  //           fill
-  //           sizes="(max-width: 768px) 100vw"
-  //           className="object-fill"
-  //         />
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     title: t('table:table-item-products'),
-  //     dataIndex: 'product_name',
-  //     key: 'product_name',
-  //     align: alignLeft,
-  //     render: (product_name: string, item: any) => (
-  //       <div>
-  //         <span>{product_name}</span>
-  //         <span className="mx-2">x</span>
-  //         <span className="font-semibold text-heading">
-  //           {item.order_quantity}
-  //         </span>
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     title: t('table:table-item-unit-price'),
-  //     dataIndex: 'unit_price',
-  //     key: 'unit_price',
-  //     align: alignRight,
-  //     render: function Render(_: any, item: any) {
-  //       const { price } = usePrice({
-  //         amount: parseFloat(item.unit_price || item.price),
-  //       });
-  //       return <span>{price}</span>;
-  //     },
-  //   },
-  //   {
-  //     title: t('table:table-item-discount'),
-  //     dataIndex: 'discount',
-  //     key: 'discount',
-  //     align: alignRight,
-  //     render: function Render(_: any, item: any) {
-  //       const hasDiscount = item.discount && item.discount > 0;
-  //       const isPercentageDiscount = item.discount_type === 'percentage';
-
-  //       if (!hasDiscount) {
-  //         return <span className="text-gray-400">—</span>;
-  //       }
-
-  //       const { price: discountAmount } = usePrice({
-  //         amount: parseFloat(item.discount),
-  //       });
-
-  //       // Calculate total discount for the quantity
-  //       const totalDiscount =
-  //         parseFloat(item.discount) * parseFloat(item.order_quantity);
-  //       const { price: totalDiscountPrice } = usePrice({
-  //         amount: totalDiscount,
-  //       });
-
-  //       return (
-  //         <div className="flex flex-col items-end">
-  //           <span className="text-green-600 font-medium">
-  //             -{totalDiscountPrice}
-  //           </span>
-  //           {isPercentageDiscount && item.original_price && (
-  //             <span className="text-xs text-gray-500">
-  //               {(
-  //                 (parseFloat(item.discount) /
-  //                   parseFloat(item.original_price)) *
-  //                 100
-  //               ).toFixed(0)}
-  //               % off
-  //             </span>
-  //           )}
-  //           {!isPercentageDiscount && (
-  //             <span className="text-xs text-gray-500">
-  //               ${parseFloat(item.discount).toFixed(2)} off/unit
-  //             </span>
-  //           )}
-  //         </div>
-  //       );
-  //     },
-  //   },
-  //   {
-  //     title: t('table:table-item-total'),
-  //     dataIndex: 'subtotal',
-  //     key: 'subtotal',
-  //     align: alignRight,
-  //     render: function Render(_: any, item: any) {
-  //       // Calculate the discounted total
-  //       const hasDiscount = item.discount > 0;
-  //       const unitPrice = parseFloat(item.unit_price || item.price);
-  //       const quantity = parseFloat(item.order_quantity);
-
-  //       let total = unitPrice * quantity;
-
-  //       if (hasDiscount) {
-  //         const discountAmount = parseFloat(item.discount);
-  //         if (item.discount_type === 'percentage') {
-  //           // Percentage discount
-  //           const discountPerUnit = (unitPrice * discountAmount) / 100;
-  //           total = (unitPrice - discountPerUnit) * quantity;
-  //         } else {
-  //           // Fixed discount
-  //           total = (unitPrice - discountAmount) * quantity;
-  //         }
-  //       }
-
-  //       const { price } = usePrice({
-  //         amount: total,
-  //       });
-
-  //       return (
-  //         <div className="flex flex-col items-end">
-  //           {hasDiscount && (
-  //             <span className="text-xs text-gray-400 line-through">
-  //               {(() => {
-  //                 const { price: originalPrice } = usePrice({
-  //                   amount:
-  //                     parseFloat(item.unit_price || item.price) * quantity,
-  //                 });
-  //                 return originalPrice;
-  //               })()}
-  //             </span>
-  //           )}
-  //           <span className={hasDiscount ? 'text-green-600 font-semibold' : ''}>
-  //             {price}
-  //           </span>
-  //         </div>
-  //       );
-  //     },
-  //   },
-  // ];
-
-  const columns = [
-    {
-      dataIndex: 'image',
-      key: 'image',
-      width: 70,
-      render: (image: Attachment) => (
-        <div className="relative h-[50px] w-[50px]">
-          <Image
-            src={image?.thumbnail ?? siteSettings.product.placeholder}
-            alt="alt text"
-            fill
-            sizes="(max-width: 768px) 100vw"
-            className="object-fill"
-          />
-        </div>
-      ),
-    },
-    {
-      title: t('table:table-item-products'),
-      dataIndex: 'product_name',
-      key: 'product_name',
-      align: alignLeft,
-      render: (product_name: string, item: any) => (
-        <div>
-          <span>{product_name}</span>
-          <span className="mx-2">x</span>
-          <span className="font-semibold text-heading">
-            {item.order_quantity}
-          </span>
-          {item.unit && (
-            <span className="ml-1 text-xs text-gray-400">/{item.unit}</span>
-          )}
-        </div>
-      ),
-    },
-    {
-      title: t('table:table-item-unit-price'),
-      dataIndex: 'unit_price',
-      key: 'unit_price',
-      align: alignRight,
-      render: function Render(_: any, item: any) {
-        const hasDiscount = item.discount && item.discount > 0;
-        const unitPrice = parseFloat(item.unit_price || item.price);
-
-        const { price } = usePrice({
-          amount: unitPrice,
-        });
-
-        if (hasDiscount) {
-          const discountAmount = parseFloat(item.discount);
-          let discountedPrice = unitPrice;
-
-          if (item.discount_type === 'percentage') {
-            discountedPrice = unitPrice * (1 - discountAmount / 100);
-          } else {
-            discountedPrice = unitPrice - discountAmount;
-          }
-
-          const { price: discountedPriceFormatted } = usePrice({
-            amount: discountedPrice,
-          });
-
-          return (
-            <div className="flex flex-col items-end">
-              <span className="text-xs text-gray-400 line-through">
-                {price}
-              </span>
-              <span className="text-green-600 font-medium">
-                {discountedPriceFormatted}
-              </span>
-            </div>
-          );
-        }
-
-        return <span>{price}</span>;
-      },
-    },
-    {
-      title: t('table:table-item-discount'),
-      dataIndex: 'discount',
-      key: 'discount',
-      align: alignRight,
-      render: function Render(_: any, item: any) {
-        const hasDiscount = item.discount && item.discount > 0;
-
-        if (!hasDiscount) {
-          return <span className="text-gray-400">—</span>;
-        }
-
-        const discountAmount = parseFloat(item.discount);
-        const quantity = parseFloat(item.order_quantity);
-        const totalDiscount = discountAmount * quantity;
-        const { price: totalDiscountPrice } = usePrice({
-          amount: totalDiscount,
-        });
-
-        return (
-          <div className="flex flex-col items-end">
-            <span className="text-red-500 font-medium">
-              -{totalDiscountPrice}
-            </span>
-            <span className="text-xs text-gray-500">
-              {item.discount_type === 'percentage'
-                ? `${discountAmount}% off`
-                : `$${discountAmount.toFixed(2)}/unit`}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      title: t('table:table-item-total'),
-      dataIndex: 'subtotal',
-      key: 'subtotal',
-      align: alignRight,
-      render: function Render(_: any, item: any) {
-        const unitPrice = parseFloat(item.unit_price || item.price);
-        const quantity = parseFloat(item.order_quantity);
-        const hasDiscount = item.discount && item.discount > 0;
-
-        let total = unitPrice * quantity;
-        let originalTotal = total;
-
-        if (hasDiscount) {
-          const discountAmount = parseFloat(item.discount);
-          if (item.discount_type === 'percentage') {
-            const discountPerUnit = (unitPrice * discountAmount) / 100;
-            total = (unitPrice - discountPerUnit) * quantity;
-          } else {
-            total = (unitPrice - discountAmount) * quantity;
-          }
-        }
-
-        const { price: totalPrice } = usePrice({
-          amount: total,
-        });
-
-        if (hasDiscount) {
-          const { price: originalPrice } = usePrice({
-            amount: originalTotal,
-          });
-
-          return (
-            <div className="flex flex-col items-end">
-              <span className="text-xs text-gray-400 line-through">
-                {originalPrice}
-              </span>
-              <span className="text-green-600 font-semibold">{totalPrice}</span>
-            </div>
-          );
-        }
-
-        return <span>{totalPrice}</span>;
-      },
-    },
-  ];
   return (
     <>
       <Card className="relative overflow-hidden">
@@ -510,28 +162,7 @@ export default function OrderDetailsPage() {
         </div>
 
         <div className="mb-10">
-          {order ? (
-            <Table
-              //@ts-ignore
-              columns={columns}
-              emptyText={() => (
-                <div className="flex flex-col items-center py-7">
-                  <NoDataFound className="w-52" />
-                  <div className="mb-1 pt-6 text-base font-semibold text-heading">
-                    {t('table:empty-table-data')}
-                  </div>
-                  <p className="text-[13px]">
-                    {t('table:empty-table-sorry-text')}
-                  </p>
-                </div>
-              )}
-              data={order?.items!}
-              rowKey="id"
-              scroll={{ x: 300 }}
-            />
-          ) : (
-            <span>{t('common:no-order-found')}</span>
-          )}
+          <OrderItemList items={order?.items} />
 
           {order?.parent_id! ? (
             <div className="flex w-full flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4 ms-auto sm:w-1/2 md:w-1/3">
@@ -610,13 +241,13 @@ export default function OrderDetailsPage() {
             <div className="flex flex-col items-start space-y-1 text-sm text-body">
               <span>{formatString(order?.items?.length, t('text-item'))}</span>
               {/* <span>{order?.delivery_time}</span> */}
-              {/* <span>
+              <span>
                 {`${t('text-payment-method')}:  ${order?.payment_gateway}`}
-              </span> */}
+              </span>
             </div>
           </div>
 
-          {/* <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
+          <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
             <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading">
               {t('common:billing-address')}
             </h3>
@@ -626,9 +257,11 @@ export default function OrderDetailsPage() {
               {order?.billing_address && (
                 <span>{formatAddress(order.billing_address)}</span>
               )}
-              {order?.customer_contact && <span>{phoneNumber}</span>}
+              {order?.customer_contact && (
+                <span>{order?.customer_contact}</span>
+              )}
             </div>
-          </div> */}
+          </div>
 
           {/* <div className="w-full sm:w-1/2 sm:ps-8">
             <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading text-start sm:text-end">

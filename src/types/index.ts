@@ -161,7 +161,7 @@ export enum Permission {
 
 export interface GetParams {
   slug: string;
-  language: string;
+  language?: string;
 }
 
 export interface QueryOptions {
@@ -240,6 +240,167 @@ export interface Category {
   products: Product[];
   created_at: string;
   updated_at: string;
+}
+
+export interface Supplier {
+  id: number;
+  supplier_code: string;
+  company_name: string;
+  contact_person: string;
+  email?: string;
+  phone?: string;
+  mobile?: string;
+  address_line_1: string;
+  address_line_2: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_active: boolean;
+}
+
+export interface CreateSupplierInput {
+  supplier_code: string;
+  company_name: string;
+  contact_person?: string;
+  email?: string;
+  phone?: string;
+  mobile?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+  is_active?: boolean;
+}
+
+export interface Warehouse {
+  id: number;
+  warehouse_code: string;
+  description: string;
+  address_line_1: string;
+  address_line_2?: string;
+  city?: string;
+  state?: string;
+  postal_code: string;
+  country: string;
+  is_active: boolean;
+}
+
+export interface CreateWarehouseInput {
+  warehouse_code: string;
+  name: string;
+  description?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+  is_active?: boolean;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  po_number: string;
+  supplier: Supplier;
+  warehouse: Warehouse;
+  status?: PurchaseOrderStatus;
+  order_date?: string;
+  expected_delivery_date?: string;
+  remarks: string;
+  created_by: User;
+  approved_by: User;
+  approved_at: string;
+  items: PurchaseOrderItem[];
+}
+
+export interface CreatePurchaseOrderInput {
+  // po_number?: string;
+  supplier_id: number;
+  warehouse_id: number;
+  // status?: PurchaseOrderStatus;
+  order_date?: string;
+  expected_delivery_date?: string;
+  remarks?: string;
+  // created_by: User;
+  // approved_by: User;
+  // approved_at: string;
+  items: CreatePurchaseOrderItem[];
+}
+
+export interface PurchaseOrderItem {
+  id: string;
+  product: Product;
+  ordered_quantity: number;
+  received_quantity: number;
+  purchase_price: number;
+  line_total: number;
+}
+
+export interface CreatePurchaseOrderItem {
+  product_id: number;
+  quantity: number;
+  received_quantity?: number;
+  purchase_price?: number;
+  line_total?: number;
+}
+
+export interface GoodsReceivedNote {
+  id: string;
+  purchase_order: PurchaseOrder;
+  grn_number: string;
+  supplier: Supplier;
+  warehouse: Warehouse;
+  status: GRNStatus;
+  supplier_invoice_number: string;
+  supplier_invoice_date: string;
+  received_at: string;
+  remarks: string;
+  items: GoodsReceivedItem[];
+  received_by: User;
+  purchase_order_number: string;
+  approved_at: string;
+  approved_by: User;
+}
+
+export interface CreateGoodsReceivedNoteInput {
+  purchase_order: PurchaseOrder;
+  grn_number: string;
+  supplier: Supplier;
+  warehouse: Warehouse;
+  status: GRNStatus;
+  supplier_invoice_number: string;
+  supplier_invoice_date: string;
+  received_at: string;
+  remarks: string;
+  items: GoodsReceivedItem[];
+  received_by: User;
+  purchase_order_number: string;
+  approved_at: string;
+  approved_by: User;
+}
+
+export interface GoodsReceivedItem {
+  id: string;
+  grn: GoodsReceivedNote;
+  product: Product;
+  quantity: number;
+  purchase_price: number;
+  selling_price: number;
+  batch_number: string;
+  expiry_date: string;
+}
+
+export interface CreateGoodsReceivedItem {
+  grn: GoodsReceivedNote;
+  product: Product;
+  quantity: number;
+  purchase_price: number;
+  selling_price: number;
+  batch_number: string;
+  expiry_date: string;
 }
 
 export interface Attribute {
@@ -736,7 +897,7 @@ export interface VerifyCouponResponse {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   translated_languages: string[];
   shop_id: string;
   name: string;
@@ -1796,6 +1957,23 @@ export interface CategoryQueryOptions extends QueryOptions {
   self: string;
 }
 
+export interface SupplierQueryOptions extends QueryOptions {
+  name: string;
+  contact_number: string;
+}
+
+export interface WarehouseQueryOptions extends QueryOptions {
+  name: string;
+  contact_number: string;
+}
+export interface PurchaseOrderQueryOptions extends QueryOptions {
+  name: string;
+  contact_number: string;
+}
+export interface GoodsReceivedNoteQueryOptions extends QueryOptions {
+  name: string;
+  contact_number: string;
+}
 export interface CustomerQueryOptions extends QueryOptions {
   name: string;
   contact_number: string;
@@ -2022,6 +2200,14 @@ export interface ItemProps {
   id: number;
   title: string;
 }
+
+export interface SupplierPaginator extends PaginatorInfo<Supplier> {}
+
+export interface WarehousePaginator extends PaginatorInfo<Warehouse> {}
+
+export interface PurchaseOrderPaginator extends PaginatorInfo<PurchaseOrder> {}
+
+export interface GoodsReceivedNotePaginator extends PaginatorInfo<GoodsReceivedNote> {}
 
 export interface ShopPaginator extends PaginatorInfo<Shop> {}
 
@@ -2278,6 +2464,21 @@ export enum OwnerShipTransferStatus {
   PROCESSING = 'processing',
   APPROVED = 'approved',
   REJECTED = 'rejected',
+}
+
+export enum PurchaseOrderStatus {
+  DRAFT = 'draft',
+  APPROVED = 'approved',
+  PARTIALLY_RECEIVED = 'partially_received',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export enum GRNStatus {
+  DRAFT = 'draft',
+  RECEIVED = 'received',
+  APPROVED = 'approved',
+  CANCELLED = 'cancelled',
 }
 
 export interface OwnershipTransfer {

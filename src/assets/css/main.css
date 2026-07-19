@@ -308,6 +308,27 @@
     @apply font-body;
   }
 
+  .no-print {
+    /* display: none !important; */
+  }
+
+  .print-container {
+    display: block !important;
+  }
+
+  .invoice {
+    width: 210mm;
+    min-height: 297mm;
+    margin: auto;
+    padding: 18mm;
+    background: white;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
