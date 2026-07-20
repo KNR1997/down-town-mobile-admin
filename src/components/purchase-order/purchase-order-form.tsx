@@ -20,13 +20,16 @@ import {
   useCreatePurchaseOrderMutation,
   useUpdatePurchaseOrderMutation,
 } from '@/data/purchase-order';
+import { useUsersQuery } from '@/data/user';
 import { useWarehousesQuery } from '@/data/warehouse';
 // types
 import {
   ItemProps,
   Product,
   PurchaseOrder,
+  PurchaseOrderStatus,
   Supplier,
+  User,
   Warehouse,
 } from '@/types';
 // validations
@@ -38,6 +41,7 @@ import Button from '@/components/ui/button';
 import Card from '@/components/common/card';
 import Description from '@/components/ui/description';
 import SelectInput from '@/components/ui/select-input';
+import Checkbox from '@/components/ui/checkbox/checkbox';
 import StickyFooterPanel from '@/components/ui/sticky-footer-panel';
 import { selectStyles } from '@/components/ui/select/select.styles';
 import ValidationError from '@/components/ui/form-validation-error';
@@ -100,7 +104,39 @@ function SelectWarehouse({
   );
 }
 
+function SelectUsers({
+  control,
+  errors,
+}: {
+  control: Control<FormValues>;
+  errors: FieldErrors;
+}) {
+  const { t } = useTranslation();
+  const { users, loading } = useUsersQuery({
+    limit: 999,
+    page: 1,
+  });
+  return (
+    <div className="mb-5">
+      <SelectInput
+        label="Approved By"
+        required
+        name="approved_by"
+        control={control}
+        // @ts-ignore
+        getOptionLabel={(option: User) => option.name}
+        // @ts-ignore
+        getOptionValue={(option: User) => option.id}
+        options={users!}
+        isLoading={loading}
+      />
+      <ValidationError message={t(errors.approved_by?.message)} />
+    </div>
+  );
+}
+
 type PurchaseOrderItem = {
+  id: number | null;
   product?: {
     value: number;
     label: string;
@@ -111,14 +147,19 @@ type PurchaseOrderItem = {
 type FormValues = {
   supplier: Supplier;
   warehouse: Warehouse;
+  is_approved: boolean;
+  approved_by: User | null;
   items: PurchaseOrderItem[];
 };
 
 const defaultValues: FormValues = {
   supplier: null as any,
   warehouse: null as any,
+  is_approved: false,
+  approved_by: null,
   items: [
     {
+      id: null,
       product: null,
       ordered_quantity: 1,
     },
@@ -128,6 +169,7 @@ const defaultValues: FormValues = {
 type IProps = {
   initialValues?: PurchaseOrder;
 };
+
 export default function CreateOrUpdatePurchaseOrderForm({
   initialValues,
 }: IProps) {
@@ -138,15 +180,18 @@ export default function CreateOrUpdatePurchaseOrderForm({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     //@ts-ignore
     defaultValues: initialValues
       ? {
           ...initialValues,
+          is_approved: initialValues.status == PurchaseOrderStatus.APPROVED,
           items: initialValues.items.map((item) => ({
+            id: item.id,
             product: {
-              value: item.id,
+              value: item.product.id,
               label: `${item.product.sku} - ${item.product.name}`,
             },
             ordered_quantity: item.ordered_quantity,
@@ -183,16 +228,17 @@ export default function CreateOrUpdatePurchaseOrderForm({
     const input = {
       supplier_id: values.supplier.id,
       warehouse_id: values.warehouse.id,
+      is_approved: values.is_approved,
+      approved_by: values.approved_by?.id,
       items: values.items.map((item) => ({
+        id: item.id,
         product_id: item.product!.value,
         quantity: item.ordered_quantity,
       })),
     };
 
     try {
-      if (
-        !initialValues
-      ) {
+      if (!initialValues) {
         createPurchaseOrder({
           ...input,
         });
@@ -206,6 +252,8 @@ export default function CreateOrUpdatePurchaseOrderForm({
       // getErrorMessage(err);
     }
   };
+
+  const is_approved = watch('is_approved');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -235,24 +283,28 @@ export default function CreateOrUpdatePurchaseOrderForm({
         <Card className="w-full sm:w-8/12 md:w-2/3">
           <SelectSuppliers control={control} errors={errors} />
           <SelectWarehouse control={control} errors={errors} />
-
-          {/* <Input
-            label={t('form:input-label-name')}
-            {...register('name')}
-            error={t(errors.name?.message!)}
-            variant="outline"
+          <Checkbox
+            {...register('is_approved')}
+            id="is_approved"
+            label="Is Approved"
+            // disabled={Boolean(is_external)}
             className="mb-5"
-          /> */}
+          />
+          {is_approved && (
+            <>
+              <SelectUsers control={control} errors={errors} />
+            </>
+          )}
         </Card>
       </div>
       <div className="flex flex-wrap my-5 sm:my-8">
         <Description
-          title={t('form:input-label-description')}
+          title="Purchase Order Items"
           details={`${
             initialValues
               ? t('form:item-description-edit')
               : t('form:item-description-add')
-          } ${t('form:purchase-order-description-helper-text')}`}
+          } ${t('form:purchase-order-items-description-helper-text')}`}
           className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5 "
         />
 
@@ -264,15 +316,6 @@ export default function CreateOrUpdatePurchaseOrderForm({
                 key={item.id}
               >
                 <div className="grid grid-cols-12 gap-4">
-                  {/* <Input
-                    className="sm:col-span-2"
-                    label={t('form:input-label-value')}
-                    variant="outline"
-                    {...register(`values.${index}.value` as const)}
-                    defaultValue={item.value!} // make sure to set up defaultValue
-                    // @ts-ignore
-                    error={t(errors?.values?.[index]?.value?.message)}
-                  /> */}
                   <div className="col-span-7">
                     <Label>Product</Label>
                     <Controller
@@ -325,6 +368,7 @@ export default function CreateOrUpdatePurchaseOrderForm({
             type="button"
             onClick={() =>
               append({
+                id: null,
                 product: null,
                 ordered_quantity: 1,
               })
