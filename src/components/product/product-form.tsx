@@ -300,7 +300,7 @@ export default function CreateOrUpdateProductForm({
       ) : null}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+          <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
             <Description
               title={t('form:featured-image-title')}
               details={featuredImageInformation}
@@ -309,15 +309,15 @@ export default function CreateOrUpdateProductForm({
 
             <Card className="w-full sm:w-8/12 md:w-2/3">
               <FileInput name="image" control={control} multiple={false} />
-              {errors.image?.message && (
+              {/* {errors.image?.message && (
                 <p className="my-2 text-xs text-red-500">
                   {t(errors?.image?.message!)}
                 </p>
-              )}
+              )} */}
             </Card>
-          </div> */}
+          </div>
 
-          {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+          <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
             <Description
               title={t('form:gallery-title')}
               details={galleryImageInformation}
@@ -327,9 +327,9 @@ export default function CreateOrUpdateProductForm({
             <Card className="w-full sm:w-8/12 md:w-2/3">
               <FileInput name="gallery" control={control} />
             </Card>
-          </div> */}
+          </div>
 
-          {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+          <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
             <Description
               title={t('form:video-title')}
               details={t('form:video-help-text')}
@@ -337,6 +337,7 @@ export default function CreateOrUpdateProductForm({
             />
 
             <Card className="w-full sm:w-8/12 md:w-2/3">
+              {/* Video url picker */}
               <div>
                 {fields?.map((item: any, index: number) => (
                   <div
@@ -381,7 +382,7 @@ export default function CreateOrUpdateProductForm({
                 {t('form:button-label-add-video')}
               </Button>
             </Card>
-          </div> */}
+          </div>
 
           <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
             <Description
@@ -396,9 +397,9 @@ export default function CreateOrUpdateProductForm({
                 error={t((errors?.type as any)?.message)}
               />
               <ProductCategoryInput control={control} setValue={setValue} />
-              {/* <ProductAuthorInput control={control} /> */}
-              {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
-              {/* <ProductTagInput control={control} setValue={setValue} /> */}
+              <ProductAuthorInput control={control} />
+              <ProductManufacturerInput control={control} setValue={setValue} />
+              <ProductTagInput control={control} setValue={setValue} />
             </Card>
           </div>
 
@@ -415,12 +416,11 @@ export default function CreateOrUpdateProductForm({
 
             <Card className="w-full sm:w-8/12 md:w-2/3">
               <Input
-                label={t('form:input-label-name')}
+                label={`${t('form:input-label-name')}*`}
                 {...register('name')}
                 error={t(errors.name?.message!)}
                 variant="outline"
                 className="mb-5"
-                required
               />
 
               {isSlugEditable ? (
@@ -452,12 +452,11 @@ export default function CreateOrUpdateProductForm({
                 />
               )}
               <Input
-                label={t('form:input-label-unit')}
+                label={`${t('form:input-label-unit')}*`}
                 {...register('unit')}
                 error={t(errors.unit?.message!)}
                 variant="outline"
                 className="mb-5"
-                required
               />
               <div className="relative mb-5">
                 {options?.useAi && (

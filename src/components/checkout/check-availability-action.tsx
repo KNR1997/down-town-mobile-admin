@@ -33,70 +33,40 @@ export const CheckAvailabilityAction: React.FC<{
     useVerifyCheckoutMutation();
 
   function handleVerifyCheckout() {
-    verifyCheckout(
-      {
-        amount: total,
-        customer_id: customer?.value,
-        products: items?.map((item) => formatOrderedProduct(item)),
-        billing_address: {
-          ...(billing_address?.address &&
-            omit(billing_address.address, ['__typename'])),
-        } as Address,
-        shipping_address: {
-          ...(shipping_address?.address &&
-            omit(shipping_address.address, ['__typename'])),
-        } as Address,
-      },
-      {
-        onSuccess: (data: any) => {
-          //@ts-ignore
-          if (data?.errors as string) {
-            //@ts-ignore
-            toast.error(data?.errors[0]?.message);
-          } else {
-            //@ts-ignore
-            setVerifiedResponse(data);
-          }
+    if (billing_address && shipping_address) {
+      verifyCheckout(
+        {
+          amount: total,
+          customer_id: customer?.value,
+          products: items?.map((item) => formatOrderedProduct(item)),
+          billing_address: {
+            ...(billing_address?.address &&
+              omit(billing_address.address, ['__typename'])),
+          } as Address,
+          shipping_address: {
+            ...(shipping_address?.address &&
+              omit(shipping_address.address, ['__typename'])),
+          } as Address,
         },
-        onError: (error: any) => {
-          setError(error?.message);
+        {
+          onSuccess: (data: any) => {
+            //@ts-ignore
+            if (data?.errors as string) {
+              //@ts-ignore
+              toast.error(data?.errors[0]?.message);
+            } else {
+              //@ts-ignore
+              setVerifiedResponse(data);
+            }
+          },
+          onError: (error: any) => {
+            setError(error?.message);
+          },
         },
-      },
-    );
-    // if (billing_address && shipping_address) {
-    //   verifyCheckout(
-    //     {
-    //       amount: total,
-    //       customer_id: customer?.value,
-    //       products: items?.map((item) => formatOrderedProduct(item)),
-    //       billing_address: {
-    //         ...(billing_address?.address &&
-    //           omit(billing_address.address, ['__typename'])),
-    //       } as Address,
-    //       shipping_address: {
-    //         ...(shipping_address?.address &&
-    //           omit(shipping_address.address, ['__typename'])),
-    //       } as Address,
-    //     },
-    //     {
-    //       onSuccess: (data: any) => {
-    //         //@ts-ignore
-    //         if (data?.errors as string) {
-    //           //@ts-ignore
-    //           toast.error(data?.errors[0]?.message);
-    //         } else {
-    //           //@ts-ignore
-    //           setVerifiedResponse(data);
-    //         }
-    //       },
-    //       onError: (error: any) => {
-    //         setError(error?.message);
-    //       },
-    //     },
-    //   );
-    // } else {
-    //   setError('error-add-both-address');
-    // }
+      );
+    } else {
+      setError('error-add-both-address');
+    }
   }
 
   return (

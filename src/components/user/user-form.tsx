@@ -26,7 +26,7 @@ const defaultValues = {
   password: '',
 };
 
-const UserCreateForm = () => {
+const CustomerCreateForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { mutate: registerUser, isLoading: loading } = useRegisterMutation();
@@ -117,4 +117,4 @@ const UserCreateForm = () => {
   );
 };
 
-export default UserCreateForm;
+export default CustomerCreateForm;

@@ -27,8 +27,6 @@ const CreateOrUpdateAddressForm = () => {
   const { closeModal } = useModalAction();
   const { mutate: updateProfile } = useUpdateUserMutation();
 
-  console.log('customerId------------: ', customerId)
-
   function onSubmit(values: FormValues) {
     const { __typename, ...rest } = values;
     updateProfile({

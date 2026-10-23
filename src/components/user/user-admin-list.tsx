@@ -47,9 +47,7 @@ const AdminsList = ({
   const onHeaderClick = (column: any | null) => ({
     onClick: () => {
       onSort((currentSortDirection: SortOrder) =>
-        currentSortDirection === SortOrder.Desc
-          ? SortOrder.Asc
-          : SortOrder.Desc,
+        currentSortDirection === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc
       );
 
       onOrder(column);
@@ -100,7 +98,7 @@ const AdminsList = ({
       onHeaderCell: () => onHeaderClick('name'),
       render: (
         name: string,
-        { profile, email }: { profile: any; email: string },
+        { profile, email }: { profile: any; email: string }
       ) => (
         <div className="flex items-center">
           <Avatar name={name} src={profile?.avatar?.thumbnail} />
@@ -122,15 +120,7 @@ const AdminsList = ({
       render: (permissions: any) => {
         return (
           <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
-            {permissions?.map((permission: string) => (
-              <span
-                key={permission}
-                className="rounded bg-gray-200/50 px-2.5 py-1"
-              >
-                {permission}
-              </span>
-            ))}
-            {/* {permissions?.map(
+            {permissions?.map(
               ({ name, index }: { name: string; index: number }) => (
                 <span
                   key={index}
@@ -139,7 +129,7 @@ const AdminsList = ({
                   {name}
                 </span>
               )
-            )} */}
+            )}
           </div>
         );
       },

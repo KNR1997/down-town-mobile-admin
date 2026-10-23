@@ -101,12 +101,11 @@ export const userClient = {
       ...params,
     });
   },
-  fetchCustomers: ({ name, ...params }: Partial<UserQueryOptions>) => {
+  fetchCustomers: ({ ...params }: Partial<UserQueryOptions>) => {
     return HttpClient.get<UserPaginator>(API_ENDPOINTS.CUSTOMERS, {
       searchJoin: 'and',
       with: 'wallet',
       ...params,
-      search: HttpClient.formatSearchParams({ name })
     });
   },
   getMyStaffs: ({ is_active, shop_id, name, ...params }: Partial<UserQueryOptions & { shop_id: string }>) => {

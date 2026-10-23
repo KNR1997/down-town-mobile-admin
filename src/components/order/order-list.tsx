@@ -99,7 +99,7 @@ const OrderList = ({
       key: 'name',
       align: alignLeft,
       width: 250,
-      onHeaderCell: () => onHeaderClick('customer_name'),
+      onHeaderCell: () => onHeaderClick('name'),
       // render: (logo: any, record: any) => (
       //   <Image
       //     src={logo?.thumbnail ?? siteSettings.product.placeholder}
@@ -122,13 +122,13 @@ const OrderList = ({
         </div>
       ),
     },
-    // {
-    //   title: t('table:table-item-products'),
-    //   dataIndex: 'products',
-    //   key: 'products',
-    //   align: 'center',
-    //   render: (products: Product) => <span>{products.length}</span>,
-    // },
+    {
+      title: t('table:table-item-products'),
+      dataIndex: 'products',
+      key: 'products',
+      align: 'center',
+      render: (products: Product) => <span>{products.length}</span>,
+    },
     {
       // title: t('table:table-item-order-date'),
       title: (
@@ -189,7 +189,7 @@ const OrderList = ({
       onHeaderCell: () => onHeaderClick('total'),
       render: function Render(value: any) {
         const { price } = usePrice({
-          amount: Number(value),
+          amount: value,
         });
         return <span className="whitespace-nowrap">{price}</span>;
       },

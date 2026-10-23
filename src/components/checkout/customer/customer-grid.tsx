@@ -1,17 +1,8 @@
 import { useAtom } from 'jotai';
-import { useTranslation } from 'next-i18next';
-// contexts
-import {
-  customerAtom,
-  // customerContactAtom,
-  // customerNameAtom,
-} from '@/contexts/checkout';
-// components
-import { CloseIcon } from '@/components/icons/close-icon';
-import { SearchIcon } from '@/components/icons/search-icon';
-import { PlusIcon } from '@/components/icons/plus-icon';
+import { customerAtom } from '@/contexts/checkout';
 import { useModalAction } from '@/components/ui/modal/modal.context';
-import SelectInput from '@/components/ui/select-input';
+import { PlusIcon } from '@/components/icons/plus-icon';
+import { useTranslation } from 'next-i18next';
 
 interface CustomerProps {
   label: string;
@@ -20,26 +11,13 @@ interface CustomerProps {
 }
 
 const CustomerGrid = ({ label, count, className }: CustomerProps) => {
-  const [customer, setCustomer] = useAtom(customerAtom);
-  // const [__, setCustomerName] = useAtom(customerNameAtom);
-  // const [___, setCustomerContact] = useAtom(customerContactAtom);
+  const [customer] = useAtom(customerAtom);
   const { openModal } = useModalAction();
   const { t } = useTranslation('common');
 
-  function handleSelectCustomer() {
+  function onAddOrChange() {
     openModal('SELECT_CUSTOMER');
   }
-
-  function handleCreateCustomer() {
-    openModal('CREATE_CUSTOMER');
-  }
-
-  function handleClearCustomer() {
-    setCustomer(null);
-    // setCustomerName('');
-    // setCustomerContact('');
-  }
-
   return (
     <div className={className}>
       <div className="mb-5 flex items-center justify-between md:mb-8">
@@ -52,42 +30,20 @@ const CustomerGrid = ({ label, count, className }: CustomerProps) => {
           <p className="text-lg capitalize text-heading lg:text-xl">{label}</p>
         </div>
 
-        <div>
-          {customer ? (
-            <button
-              className="flex items-center text-sm font-semibold text-red-400 transition-colors duration-200 hover:text-red-500 focus:text-accent-hover focus:outline-none"
-              onClick={handleClearCustomer}
-            >
-              <CloseIcon className="me-0.5 h-4 w-4 stroke-2" />
-              {t('text-clear')}
-            </button>
-          ) : (
-            <div className="flex justify-between gap-2">
-              <button
-                className="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-none"
-                onClick={handleSelectCustomer}
-              >
-                <SearchIcon className="me-0.5 h-4 w-4 stroke-2" />
-                {/* {customer?.value ? t('text-update') : t('text-search')} */}
-                {t('text-search')}
-              </button>
-              <button
-                className="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-none"
-                onClick={handleCreateCustomer}
-              >
-                <PlusIcon className="me-0.5 h-4 w-4 stroke-2" />
-                {t('text-add')}
-              </button>
-            </div>
-          )}
-        </div>
+        <button
+          className="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-none"
+          onClick={onAddOrChange}
+        >
+          <PlusIcon className="me-0.5 h-4 w-4 stroke-2" />
+          {customer?.value ? t('text-update') : t('text-add')}
+        </button>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {customer ? (
+        {customer?.value ? (
           <div className="group relative h-full cursor-pointer rounded border border-accent bg-light p-4 shadow-sm hover:border-accent">
             <p className="text-sm font-semibold capitalize text-heading">
-              {customer.name}
+              {customer.label}
             </p>
           </div>
         ) : (

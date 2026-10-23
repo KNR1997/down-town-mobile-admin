@@ -57,24 +57,24 @@ const TopRatedProducts = dynamic(
 export default function Dashboard() {
   const { t } = useTranslation();
   const { locale } = useRouter();
-  // const { data, isLoading: loading } = useAnalyticsQuery();
+  const { data, isLoading: loading } = useAnalyticsQuery();
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTimeFrame, setActiveTimeFrame] = useState(1);
-  // const [orderDataRange, setOrderDataRange] = useState(
-  //   data?.todayTotalOrderByStatus,
-  // );
+  const [orderDataRange, setOrderDataRange] = useState(
+    data?.todayTotalOrderByStatus,
+  );
 
-  // const { price: total_revenue } = usePrice(
-  //   data && {
-  //     amount: data?.totalRevenue!,
-  //   },
-  // );
-  // const { price: todays_revenue } = usePrice(
-  //   data && {
-  //     amount: data?.todaysRevenue!,
-  //   },
-  // );
+  const { price: total_revenue } = usePrice(
+    data && {
+      amount: data?.totalRevenue!,
+    },
+  );
+  const { price: todays_revenue } = usePrice(
+    data && {
+      amount: data?.todaysRevenue!,
+    },
+  );
   const {
     error: orderError,
     orders: orderData,
@@ -86,17 +86,17 @@ export default function Dashboard() {
     page,
     tracking_number: searchTerm,
   });
-  // const {
-  //   data: popularProductData,
-  //   isLoading: popularProductLoading,
-  //   error: popularProductError,
-  // } = usePopularProductsQuery({ limit: 10, language: locale });
+  const {
+    data: popularProductData,
+    isLoading: popularProductLoading,
+    error: popularProductError,
+  } = usePopularProductsQuery({ limit: 10, language: locale });
 
-  // const {
-  //   data: topRatedProducts,
-  //   isLoading: topRatedProductsLoading,
-  //   error: topRatedProductsError,
-  // } = useTopRatedProductsQuery({ limit: 10, language: locale });
+  const {
+    data: topRatedProducts,
+    isLoading: topRatedProductsLoading,
+    error: topRatedProductsError,
+  } = useTopRatedProductsQuery({ limit: 10, language: locale });
 
   const {
     data: lowStockProduct,
@@ -107,26 +107,26 @@ export default function Dashboard() {
     language: locale,
   });
 
-  // const {
-  //   data: productByCategory,
-  //   isLoading: productByCategoryLoading,
-  //   error: productByCategoryError,
-  // } = useProductByCategoryQuery({ limit: 10, language: locale });
+  const {
+    data: productByCategory,
+    isLoading: productByCategoryLoading,
+    error: productByCategoryError,
+  } = useProductByCategoryQuery({ limit: 10, language: locale });
 
-  // const {
-  //   withdraws,
-  //   loading: withdrawLoading,
-  //   paginatorInfo: withdrawPaginatorInfo,
-  // } = useWithdrawsQuery({
-  //   limit: 10,
-  // });
+  const {
+    withdraws,
+    loading: withdrawLoading,
+    paginatorInfo: withdrawPaginatorInfo,
+  } = useWithdrawsQuery({
+    limit: 10,
+  });
 
   let salesByYear: number[] = Array.from({ length: 12 }, (_) => 0);
-  // if (!!data?.totalYearSaleByMonth?.length) {
-  //   salesByYear = data.totalYearSaleByMonth.map((item: any) =>
-  //     item.total.toFixed(2),
-  //   );
-  // }
+  if (!!data?.totalYearSaleByMonth?.length) {
+    salesByYear = data.totalYearSaleByMonth.map((item: any) =>
+      item.total.toFixed(2),
+    );
+  }
 
   function handleSearch({ searchText }: { searchText: string }) {
     setSearchTerm(searchText);
@@ -144,47 +144,47 @@ export default function Dashboard() {
     { name: t('text-yearly'), day: 365 },
   ];
 
-  // useEffect(() => {
-  //   switch (activeTimeFrame) {
-  //     case 1:
-  //       setOrderDataRange(data?.todayTotalOrderByStatus);
-  //       break;
-  //     case 7:
-  //       setOrderDataRange(data?.weeklyTotalOrderByStatus);
-  //       break;
-  //     case 30:
-  //       setOrderDataRange(data?.monthlyTotalOrderByStatus);
-  //       break;
-  //     case 365:
-  //       setOrderDataRange(data?.yearlyTotalOrderByStatus);
-  //       break;
+  useEffect(() => {
+    switch (activeTimeFrame) {
+      case 1:
+        setOrderDataRange(data?.todayTotalOrderByStatus);
+        break;
+      case 7:
+        setOrderDataRange(data?.weeklyTotalOrderByStatus);
+        break;
+      case 30:
+        setOrderDataRange(data?.monthlyTotalOrderByStatus);
+        break;
+      case 365:
+        setOrderDataRange(data?.yearlyTotalOrderByStatus);
+        break;
 
-  //     default:
-  //       setOrderDataRange(orderDataRange);
-  //       break;
-  //   }
-  // });
+      default:
+        setOrderDataRange(orderDataRange);
+        break;
+    }
+  });
 
-  // if (
-  //   loading ||
-  //   orderLoading ||
-  //   popularProductLoading ||
-  //   withdrawLoading ||
-  //   topRatedProductsLoading
-  // ) {
-  //   return <Loader text={t('common:text-loading')} />;
-  // }
-  // if (orderError || popularProductError || topRatedProductsError) {
-  //   return (
-  //     <ErrorMessage
-  //       message={
-  //         orderError?.message ||
-  //         popularProductError?.message ||
-  //         topRatedProductsError?.message
-  //       }
-  //     />
-  //   );
-  // }
+  if (
+    loading ||
+    orderLoading ||
+    popularProductLoading ||
+    withdrawLoading ||
+    topRatedProductsLoading
+  ) {
+    return <Loader text={t('common:text-loading')} />;
+  }
+  if (orderError || popularProductError || topRatedProductsError) {
+    return (
+      <ErrorMessage
+        message={
+          orderError?.message ||
+          popularProductError?.message ||
+          topRatedProductsError?.message
+        }
+      />
+    );
+  }
 
   return (
     <div className="grid gap-7 md:gap-8 lg:grid-cols-2 2xl:grid-cols-12">
@@ -201,26 +201,26 @@ export default function Dashboard() {
             subtitleTransKey="sticker-card-subtitle-rev"
             icon={<EaringIcon className="h-8 w-8" />}
             color="#1EAE98"
-            // price={total_revenue}
+            price={total_revenue}
           />
           <StickerCard
             titleTransKey="sticker-card-title-order"
             subtitleTransKey="sticker-card-subtitle-order"
             icon={<ShoppingIcon className="h-8 w-8" />}
             color="#865DFF"
-            // price={data?.totalOrders}
+            price={data?.totalOrders}
           />
           <StickerCard
             titleTransKey="sticker-card-title-vendor"
             icon={<ChecklistIcon className="h-8 w-8" />}
             color="#D74EFF"
-            // price={data?.totalVendors}
+            price={data?.totalVendors}
           />
           <StickerCard
             titleTransKey="sticker-card-title-total-shops"
             icon={<BasketIcon className="h-8 w-8" />}
             color="#E157A0"
-            // price={data?.totalShops}
+            price={data?.totalShops}
           />
         </div>
       </div>
@@ -254,7 +254,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* <OrderStatusWidget
+        <OrderStatusWidget
           order={orderDataRange}
           timeFrame={activeTimeFrame}
           allowedStatus={[
@@ -264,7 +264,7 @@ export default function Dashboard() {
             'cancel',
             // 'out-for-delivery',
           ]}
-        /> */}
+        />
       </div>
 
       <RecentOrders
@@ -304,13 +304,13 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* <PopularProductList
+      <PopularProductList
         products={popularProductData}
         title={t('table:popular-products-table-title')}
         className="lg:col-span-1 lg:col-start-2 lg:row-start-5 2xl:col-span-4 2xl:col-start-auto 2xl:row-start-auto"
-      /> */}
+      />
 
-      {/* <LowStockProduct
+      <LowStockProduct
         //@ts-ignore
         products={lowStockProduct}
         title={'text-low-stock-products'}
@@ -325,26 +325,26 @@ export default function Dashboard() {
             inputClassName="!h-10"
           />
         }
-      /> */}
+      />
 
-      {/* <TopRatedProducts
+      <TopRatedProducts
         products={topRatedProducts}
         title={'text-most-rated-products'}
         className="lg:col-span-1 lg:col-start-1 lg:row-start-5 2xl:col-span-5 2xl:col-start-auto 2xl:row-start-auto 2xl:me-20"
-      /> */}
-      {/* <ProductCountByCategory
+      />
+      <ProductCountByCategory
         products={productByCategory}
         title={'text-most-category-products'}
         className="col-span-full 2xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20"
-      /> */}
+      />
 
-      {/* <WithdrawTable
+      <WithdrawTable
         withdraws={withdraws}
         title={t('table:withdraw-table-title')}
         paginatorInfo={withdrawPaginatorInfo}
         onPagination={handlePagination}
         className="col-span-full"
-      /> */}
+      />
     </div>
   );
 }

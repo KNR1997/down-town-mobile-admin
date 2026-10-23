@@ -1,12 +1,9 @@
 import React from 'react';
 
 export type MODAL_VIEWS =
-  | 'CREATE_CUSTOMER'
   | 'DELETE_PRODUCT'
   | 'DELETE_ADDRESS'
   | 'DELETE_TYPE'
-  | 'CARD_DETAILS'
-  | 'CART_ITEM_DISCOUNT'
   | 'DELETE_ATTRIBUTE'
   | 'DELETE_CATEGORY'
   | 'DELETE_ORDER'

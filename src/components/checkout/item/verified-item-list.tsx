@@ -1,15 +1,14 @@
-import { useAtom } from 'jotai';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
-// utils
+import Coupon from '@/components/checkout/coupon';
 import usePrice from '@/utils/use-price';
-// hooks
-import { useSettingsQuery } from '@/data/settings';
-// contexts
+import EmptyCartIcon from '@/components/icons/empty-cart';
+import { CloseIcon } from '@/components/icons/close-icon';
+import { useTranslation } from 'next-i18next';
+import { useCart } from '@/contexts/quick-cart/cart.context';
 import {
   calculatePaidTotal,
   calculateTotal,
 } from '@/contexts/quick-cart/cart.utils';
+import { useAtom } from 'jotai';
 import {
   couponAtom,
   discountAtom,
@@ -17,23 +16,17 @@ import {
   verifiedResponseAtom,
   walletAtom,
 } from '@/contexts/checkout';
-import { useCart } from '@/contexts/quick-cart/cart.context';
-// types
-import { CouponType } from '@/types';
-// components
-import Coupon from '@/components/checkout/coupon';
-import Wallet from '@/components/checkout/wallet/wallet';
-import EmptyCartIcon from '@/components/icons/empty-cart';
-import { CloseIcon } from '@/components/icons/close-icon';
 import ItemCard from '@/components/checkout/item/item-card';
-import PaymentGrid from '@/components/checkout/payment/payment-grid';
 import { ItemInfoRow } from '@/components/checkout/item/item-info-row';
+import PaymentGrid from '@/components/checkout/payment/payment-grid';
 import { PlaceOrderAction } from '@/components/checkout/place-order-action';
-
+import Wallet from '@/components/checkout/wallet/wallet';
+import { CouponType } from '@/types';
+import { useSettingsQuery } from '@/data/settings';
+import { useRouter } from 'next/router';
 interface Props {
   className?: string;
 }
-
 const VerifiedItemList: React.FC<Props> = ({ className }) => {
   const { t } = useTranslation('common');
   const { locale } = useRouter();
@@ -50,29 +43,27 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
     language: locale!,
   });
 
-  console.log("items--------------------: ", items)
-
   const available_items = items?.filter(
-    (item) => !verifiedResponse?.unavailable_products?.includes(item.id),
+    (item) => !verifiedResponse?.unavailable_products?.includes(item.id)
   );
 
   const { price: tax } = usePrice(
     verifiedResponse && {
       amount: verifiedResponse.total_tax ?? 0,
-    },
+    }
   );
 
   const { price: shipping } = usePrice(
     verifiedResponse && {
       amount: verifiedResponse.shipping_charge ?? 0,
-    },
+    }
   );
 
   const base_amount = calculateTotal(available_items);
   const { price: sub_total } = usePrice(
     verifiedResponse && {
       amount: base_amount,
-    },
+    }
   );
 
   // Calculate Discount base on coupon type
@@ -95,7 +86,7 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
     //@ts-ignore
     discount && {
       amount: Number(calculateDiscount),
-    },
+    }
   );
   let freeShippings =
     options?.freeShipping && Number(options?.freeShippingAmount) <= base_amount;
@@ -103,17 +94,16 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
     ? calculatePaidTotal(
         {
           totalAmount: base_amount,
-          tax: verifiedResponse?.total_tax ?? 0,
-          shipping_charge: verifiedResponse?.shipping_charge ?? 0,
+          tax: verifiedResponse?.total_tax,
+          shipping_charge: verifiedResponse?.shipping_charge,
         },
-        Number(calculateDiscount),
+        Number(calculateDiscount)
       )
     : 0;
-
   const { price: total } = usePrice(
     verifiedResponse && {
       amount: totalPrice <= 0 ? 0 : totalPrice,
-    },
+    }
   );
   return (
     <div className={className}>
@@ -126,7 +116,7 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
         {!isEmptyCart ? (
           items?.map((item) => {
             const notAvailable = verifiedResponse?.unavailable_products?.find(
-              (d: any) => d === item.id,
+              (d: any) => d === item.id
             );
             return (
               <ItemCard
@@ -143,8 +133,8 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
 
       <div className="mt-4 space-y-2">
         <ItemInfoRow title={t('text-sub-total')} value={sub_total} />
-        {/* <ItemInfoRow title={t('text-tax')} value={tax} /> */}
-        {/* <div className="flex justify-between">
+        <ItemInfoRow title={t('text-tax')} value={tax} />
+        <div className="flex justify-between">
           <p className="text-sm text-body">
             {t('text-shipping')}{' '}
             <span className="text-xs font-semibold text-accent">
@@ -152,8 +142,8 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
             </span>
           </p>
           <span className="text-sm text-body"> {shipping}</span>
-        </div> */}
-        {/* {discount && coupon ? (
+        </div>
+        {discount && coupon ? (
           <div className="flex justify-between">
             <p className="flex items-center gap-1 text-sm text-body me-2">
               {t('text-discount')}{' '}
@@ -179,7 +169,7 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
           <div className="mt-5 !mb-4 flex justify-between">
             <Coupon subtotal={base_amount} />
           </div>
-        )} */}
+        )}
         <div className="flex justify-between border-t-4 border-double border-border-200 pt-3">
           <p className="text-base font-semibold text-heading">
             {t('text-total')}
@@ -187,13 +177,13 @@ const VerifiedItemList: React.FC<Props> = ({ className }) => {
           <span className="text-base font-semibold text-heading">{total}</span>
         </div>
       </div>
-      {/* {verifiedResponse && (
+      {verifiedResponse && (
         <Wallet
           totalPrice={totalPrice}
           walletAmount={verifiedResponse.wallet_amount}
           walletCurrency={verifiedResponse.wallet_currency}
         />
-      )} */}
+      )}
       {use_wallet && !Boolean(payableAmount) ? null : (
         <PaymentGrid className="mt-10 border border-gray-200 bg-light p-5" />
       )}

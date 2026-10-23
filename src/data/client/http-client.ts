@@ -32,7 +32,7 @@ Axios.interceptors.request.use((config) => {
 
 // Change response data/error here
 Axios.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   (error) => {
     if (
       (error.response && error.response.status === 401) ||
@@ -56,7 +56,6 @@ interface SearchParamOptions {
   code: string;
   type: string;
   name: string;
-  contact_number: string;
   shop_id: string;
   is_approved: boolean;
   tracking_number: string;

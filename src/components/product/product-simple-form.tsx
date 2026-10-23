@@ -46,13 +46,12 @@ export default function ProductSimpleForm({ initialValues, settings }: IProps) {
 
       <Card className="w-full sm:w-8/12 md:w-2/3">
         <Input
-          label={t('form:input-label-price')}
+          label={`${t('form:input-label-price')}*`}
           {...register('price')}
           type="number"
           error={t(errors.price?.message!)}
           variant="outline"
           className="mb-5"
-          required
         />
         <Input
           label={t('form:input-label-sale-price')}
@@ -64,7 +63,7 @@ export default function ProductSimpleForm({ initialValues, settings }: IProps) {
         />
 
         <Input
-          label={t('form:input-label-quantity')}
+          label={`${t('form:input-label-quantity')}*`}
           type="number"
           {...register('quantity')}
           error={t(errors.quantity?.message!)}
@@ -72,11 +71,10 @@ export default function ProductSimpleForm({ initialValues, settings }: IProps) {
           className="mb-5"
           // Need discussion
           disabled={isTranslateProduct}
-          required
         />
 
         <Input
-          label={t('form:input-label-sku')}
+          label={`${t('form:input-label-sku')}*`}
           {...register('sku')}
           note={
             Config.enableMultiLang
@@ -87,7 +85,6 @@ export default function ProductSimpleForm({ initialValues, settings }: IProps) {
           variant="outline"
           className="mb-5"
           disabled={isTranslateProduct}
-          required
         />
 
         <Input

@@ -119,7 +119,7 @@ const ProductList = ({
       dataIndex: 'product_type',
       key: 'product_type',
       width: 150,
-      align: 'center',
+      align: alignLeft,
       render: (product_type: string) => (
         <span className="truncate whitespace-nowrap capitalize">
           {product_type}
@@ -167,14 +167,14 @@ const ProductList = ({
       onHeaderCell: () => onHeaderClick('price'),
       render: function Render(value: number, record: Product) {
         const { price: max_price } = usePrice({
-          amount: Number(record?.max_price),
+          amount: record?.max_price as number,
         });
         const { price: min_price } = usePrice({
-          amount: Number(record?.min_price),
+          amount: record?.min_price as number,
         });
 
         const { price } = usePrice({
-          amount: Number(value),
+          amount: value,
         });
 
         const renderPrice =
