@@ -27,7 +27,7 @@ export function getEmailVerified(): {
   emailVerified: boolean;
 } {
   const emailVerified = Cookie.get(EMAIL_VERIFIED);
-  return emailVerified ? JSON.parse(emailVerified) : false;
+  return emailVerified ? JSON.parse(emailVerified) : { emailVerified: false };
 }
 
 export function getAuthCredentials(context?: any): {
