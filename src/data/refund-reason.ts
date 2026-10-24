@@ -1,6 +1,7 @@
 import Router, { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { Routes } from '@/config/routes';
 import { API_ENDPOINTS } from './client/api-endpoints';
@@ -34,7 +35,7 @@ export const useCreateRefunReasonMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.REFUND_REASONS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -52,7 +53,7 @@ export const useDeleteRefundReasonMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.REFUND_REASONS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -79,7 +80,7 @@ export const useUpdateRefundReasonMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.REFUND_REASONS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import type { UseInfiniteQueryOptions } from 'react-query';
@@ -143,7 +144,7 @@ export const useCreateOwnerTransferMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.OWNERSHIP_TRANSFER);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -169,7 +170,7 @@ export const useUpdateOwnerTransferMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.OWNERSHIP_TRANSFER);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -189,7 +190,7 @@ export const useDeleteOwnerTransferMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.OWNERSHIP_TRANSFER);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

@@ -1,5 +1,6 @@
 import Router, { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { API_ENDPOINTS } from '@/data/client/api-endpoints';
@@ -38,7 +39,7 @@ export const useCreateProductMutation = () => {
         const errorMessage: any = Object.values(data).flat();
         toast.error(errorMessage[0]);
       } else {
-        toast.error(t(`common:${error?.response?.data.message}`));
+        toast.error(getApiErrorMessage(error, t));
       }
     },
   });
@@ -67,7 +68,7 @@ export const useUpdateProductMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -84,7 +85,7 @@ export const useDeleteProductMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

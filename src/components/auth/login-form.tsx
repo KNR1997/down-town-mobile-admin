@@ -16,6 +16,7 @@ import {
   hasAccess,
   setAuthCredentials,
 } from '@/utils/auth-utils';
+import { getApiErrorMessage, getApiErrorStatus } from '@/utils/api-error';
 
 const loginFormSchema = yup.object().shape({
   email: yup
@@ -54,7 +55,13 @@ const LoginForm = () => {
             setErrorMessage('form:error-credential-wrong');
           }
         },
-        onError: () => {},
+        onError: (error) => {
+          setErrorMessage(
+            getApiErrorStatus(error) === 401
+              ? 'form:error-credential-wrong'
+              : getApiErrorMessage(error, t),
+          );
+        },
       }
     );
   }

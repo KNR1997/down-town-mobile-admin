@@ -1,6 +1,7 @@
 import Router, { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import { couponClient } from './client/coupon';
@@ -25,7 +26,7 @@ export const useCreateCouponMutation = () => {
       toast.success(t('common:successfully-created'));
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
     // Always refetch after error or success:
     onSettled: () => {
@@ -69,7 +70,7 @@ export const useUpdateCouponMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.COUPONS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

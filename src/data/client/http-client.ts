@@ -34,12 +34,10 @@ Axios.interceptors.request.use((config) => {
 Axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (
-      (error.response && error.response.status === 401) ||
-      (error.response && error.response.status === 403) ||
-      (error.response &&
-        error.response.data.message === 'PICKBAZAR_ERROR.NOT_AUTHORIZED')
-    ) {
+    // 401 = missing or expired session. 403 is a permission/business-rule
+    // denial and is left to the caller. A 401 without a stored token (e.g.
+    // wrong password on login) is also left to the caller.
+    if (error.response?.status === 401 && Cookies.get(AUTH_TOKEN_KEY)) {
       Cookies.remove(AUTH_TOKEN_KEY);
       Router.reload();
     }

@@ -1,6 +1,7 @@
 import Router, { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { Routes } from '@/config/routes';
 import { API_ENDPOINTS } from './client/api-endpoints';
@@ -58,7 +59,7 @@ export const useNotifyLogReadMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.NOTIFY_LOG_SEEN);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -74,7 +75,7 @@ export const useNotifyLogAllReadMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.READ_ALL_NOTIFY_LOG);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

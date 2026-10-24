@@ -6,7 +6,7 @@ import { SettingsProvider } from '@/contexts/settings.context';
 import ErrorMessage from '@/components/ui/error-message';
 import PageLoader from '@/components/ui/page-loader/page-loader';
 import { ToastContainer } from 'react-toastify';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { Hydrate } from 'react-query/hydration';
 import { useSettingsQuery } from '@/data/settings';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -20,6 +20,8 @@ import type { NextPageWithLayout } from '@/types';
 import { useRouter } from 'next/router';
 import PrivateRoute from '@/utils/private-route';
 import { Config } from '@/config';
+import { createQueryClient } from '@/data/client/query-client';
+import ErrorBoundary from '@/components/common/error-boundary';
 const Noop: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <>{children}</>
 );
@@ -39,10 +41,10 @@ type AppPropsWithLayout = AppProps & {
 const CustomApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const Layout = (Component as any).Layout || Noop;
   const authProps = (Component as any).authenticate;
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => createQueryClient());
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const { locale } = useRouter();
+  const { locale, asPath } = useRouter();
   const dir = Config.getDirection(locale);
   return (
     <div dir={dir}>
@@ -57,12 +59,16 @@ const CustomApp = ({ Component, pageProps }: AppPropsWithLayout) => {
                     {authProps ? (
                       <PrivateRoute authProps={authProps}>
                         <Layout {...pageProps}>
-                          <Component {...pageProps} />
+                          <ErrorBoundary resetKey={asPath}>
+                            <Component {...pageProps} />
+                          </ErrorBoundary>
                         </Layout>
                       </PrivateRoute>
                     ) : (
                       <Layout {...pageProps}>
-                        <Component {...pageProps} />
+                        <ErrorBoundary resetKey={asPath}>
+                          <Component {...pageProps} />
+                        </ErrorBoundary>
                       </Layout>
                     )}
                     <ToastContainer autoClose={2000} theme="colored" />

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { API_ENDPOINTS } from '@/data/client/api-endpoints';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { importClient } from '@/data/client/import';
 
@@ -22,7 +23,7 @@ export const useImportAttributesMutation = () => {
         toast.success(t('common:attribute-imported-successfully'));
       },
       onError: (error: any) => {
-        toast.error(t(`common:${error?.response?.data.message}`));
+        toast.error(getApiErrorMessage(error, t));
       },
       onSettled: () => {
         queryClient.invalidateQueries(API_ENDPOINTS.ATTRIBUTES);
@@ -44,7 +45,7 @@ export const useImportProductsMutation = () => {
         toast.success(t('common:product-imported-successfully'));
       },
       onError: (error: any) => {
-        toast.error(t(`common:${error?.response?.data.message}`));
+        toast.error(getApiErrorMessage(error, t));
       },
       onSettled: () => {
         queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);
@@ -69,7 +70,7 @@ export const useImportVariationOptionsMutation = () => {
         toast.success(t('common:variation-options-imported-successfully'));
       },
       onError: (error: any) => {
-        toast.error(t(`common:${error?.response?.data.message}`));
+        toast.error(getApiErrorMessage(error, t));
       },
       onSettled: () => {
         queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);

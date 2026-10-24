@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import { storeNoticeClient } from './client/store-notice';
@@ -40,7 +41,7 @@ export const useCreateStoreNoticeMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.STORE_NOTICES);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -58,7 +59,7 @@ export const useDeleteStoreNoticeMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.STORE_NOTICES);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -82,7 +83,7 @@ export const useUpdateStoreNoticeMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.STORE_NOTICES);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import type { UseInfiniteQueryOptions } from 'react-query';
@@ -119,7 +120,7 @@ export const useCreateFaqsMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FAQS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -145,7 +146,7 @@ export const useUpdateFaqsMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FAQS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -165,7 +166,7 @@ export const useDeleteFaqsMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FAQS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };

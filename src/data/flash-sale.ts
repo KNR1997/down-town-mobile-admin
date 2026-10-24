@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { toast } from 'react-toastify';
+import { getApiErrorMessage } from '@/utils/api-error';
 import { useTranslation } from 'next-i18next';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import type { UseInfiniteQueryOptions } from 'react-query';
@@ -153,7 +154,7 @@ export const useCreateFlashSaleMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FLASH_SALE);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -179,7 +180,7 @@ export const useUpdateFlashSaleMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FLASH_SALE);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
@@ -199,7 +200,7 @@ export const useDeleteFlashSaleMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.FLASH_SALE);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(getApiErrorMessage(error, t));
     },
   });
 };
